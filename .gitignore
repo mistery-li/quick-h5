@@ -7,6 +7,12 @@ yarn-error.log*
 pnpm-debug.log*
 lerna-debug.log*
 
+.eslintignore
+.prettierignore
+
+__snapshots__/
+coverage/
+
 node_modules
 dist
 dist-ssr

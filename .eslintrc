@@ -1,0 +1,25 @@
+{
+  "root": true,
+  "env": {
+    "browser": true,
+    "es2021": true,
+    "node": true,
+    "vue/setup-compiler-macros": true
+  },
+  "extends": [
+    "plugin:vue/vue3-recommended",
+    "eslint:recommended",
+    "@vue/typescript/recommended",
+    "@vue/prettier"
+  ],
+  "parserOptions": {
+    "parser": "@typescript-eslint/parser",
+    "ecmaVersion": 2021
+  },
+  "plugins": ["vue", "@typescript-eslint"],
+  "rules": {
+    "no-unused-vars": "error",
+    "vue/no-dupe-v-else-if": "error",
+    "vue/script-setup-uses-vars": "off"
+  }
+}
