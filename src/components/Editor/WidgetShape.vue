@@ -1,5 +1,5 @@
 <script setup lang="ts">
-  import { computed, reactive, ref, watch } from 'vue'
+  import { computed, ref } from 'vue'
   import type { CSSProperties } from 'vue'
   import { throttle } from 'lodash'
   import { storeToRefs } from 'pinia'

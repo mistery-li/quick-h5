@@ -1,15 +1,15 @@
 <script setup lang="ts">
   import { NLayout, NLayoutSider, NLayoutContent, NSpace } from 'naive-ui'
-  import Components from '../components/Components.vue'
   import Editor from '../components/Editor/index.vue'
-  import Styles from '../components/panel/Styles.vue'
+  import WidgetList from '../components/WidgetList.vue'
+  import StylesPanel from '../components/panel/StylesPanel.vue'
 </script>
 
 <template>
   <n-space vertical size="large">
     <n-layout has-sider size="large">
       <n-layout-sider bordered content-style="padding: 24px;">
-        <Components />
+        <WidgetList />
       </n-layout-sider>
       <n-layout has-sider sider-placement="right">
         <n-layout-content
@@ -27,7 +27,7 @@
           content-style="padding: 24px;"
           bordered
         >
-          <Styles />
+          <StylesPanel />
         </n-layout-sider>
       </n-layout>
     </n-layout>

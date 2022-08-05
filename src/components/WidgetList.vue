@@ -7,9 +7,9 @@
       offsetX: event.offsetX,
       offsetY: event.offsetY,
     }
-    event.dataTransfer.setData('index', event.target?.dataset?.index)
+    event.dataTransfer?.setData('index', event.target?.dataset?.index)
     // 记录鼠标拖拽开始偏移量
-    event.dataTransfer.setData('start', JSON.stringify(start))
+    event.dataTransfer?.setData('start', JSON.stringify(start))
   }
 </script>
 

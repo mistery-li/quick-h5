@@ -4,10 +4,8 @@
 
   import { getNeedsPxStyles } from '../../utils/styles'
   import { useComponentStore } from '../../store/component'
-  import { useCommonStore } from '../../store/common'
   import calculateComponentPositonAndSize from '../../utils/calcPointPos'
   import { IComponent } from '../../types'
-  import { storeToRefs } from 'pinia'
 
   type direKeys = 'lt' | 't' | 'rt' | 'r' | 'rb' | 'b' | 'lb' | 'l'
 
@@ -19,8 +17,6 @@
 
   const componentStore = useComponentStore()
   const curComponent = componentStore.curComponent!
-
-  const { editorRect } = storeToRefs(useCommonStore())
 
   const getPointStyles = () => {
     const defaultSize = 0

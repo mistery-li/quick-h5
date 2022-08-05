@@ -1,13 +1,12 @@
 <script setup lang="ts">
-  import { CSSProperties, reactive, ref, onMounted, watch } from 'vue'
+  import { CSSProperties, reactive, ref, onMounted } from 'vue'
   import { v4 as uuidv4 } from 'uuid'
   import { cloneDeep } from 'lodash'
-  import { storeToRefs } from 'pinia'
 
   import { components } from '../../config/componentData'
   import { IComponent } from '../../types'
 
-  import Shape from './Shape.vue'
+  import WidgetShape from './WidgetShape.vue'
   import VButton from '../Widget/VButton.vue'
   import VText from '../Widget/VText.vue'
   import Picture from '../Widget/Picture.vue'
@@ -23,12 +22,6 @@
   const componentStore = useComponentStore()
 
   const componentList = componentStore.components
-  watch(
-    () => componentList,
-    (value) => {
-      console.log(value, 'componentList update')
-    }
-  )
 
   const editorRef = ref<HTMLElement | null>(null)
 
@@ -52,6 +45,7 @@
     // 减去拖拽开始时候的鼠标坐标，避免位置偏移
     const transX = clientX - x - start.offsetX
     const transY = clientY - y - start.offsetY
+    // 放下组件时候如果位置+长度超出画布则至于左侧尽头
     const calcTransX =
       transX < 0
         ? 0
@@ -62,15 +56,6 @@
 
     component.x = calcTransX
     component.y = transY
-    // 放下组件时候如果位置+长度超出画布则至于左侧尽头
-    // component.style.left =
-    //   transX < 0
-    //     ? 0
-    //     : transX + (component.style.width as number) >
-    //       parseInt(defaultSize.width)
-    //     ? parseInt(defaultSize.width) - (component.style.width as number)
-    //     : transX
-    // component.style.top = transY
     component.style.transform = `translate3d(${
       transX < 0
         ? 0
@@ -126,7 +111,7 @@
     @dragover="onDragOVer"
     @mousedown="onMouseDown"
   >
-    <Shape
+    <WidgetShape
       v-for="(item, index) in componentList"
       :key="item.uuid"
       :style="getComponentStyle(item.style)"
@@ -139,7 +124,7 @@
         :element="item"
         :style="getComponentStyle(item.style)"
       ></component>
-    </Shape>
+    </WidgetShape>
   </div>
 </template>
 
