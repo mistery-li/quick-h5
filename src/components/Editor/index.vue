@@ -126,6 +126,16 @@
 </template>
 
 <style lang="scss" scoped>
+  #editor {
+    background-size: 15.625px 15.625px;
+    background-repeat: repeat;
+    background-image: linear-gradient(
+        90deg,
+        rgb(240, 240, 240) 5%,
+        transparent 0px
+      ),
+      linear-gradient(rgb(240, 240, 240) 5%, transparent 0px);
+  }
   .component {
     outline: none;
     width: 100%;
