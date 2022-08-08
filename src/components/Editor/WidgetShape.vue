@@ -1,8 +1,7 @@
 <script setup lang="ts">
-  import { computed, ref } from 'vue'
+  import { computed, ref, watch, nextTick } from 'vue'
   import type { CSSProperties } from 'vue'
   import { throttle } from 'lodash'
-  import { storeToRefs } from 'pinia'
 
   import { IComponent } from '../../types'
   import ShapePoint from './ShapePoint.vue'
@@ -16,8 +15,6 @@
   const shapeRef = ref<HTMLElement>()
 
   const componentStore = useComponentStore()
-
-  const { curComponent } = storeToRefs(componentStore)
 
   const getShapeStyle = (style: CSSProperties): CSSProperties => {
     const result: any = {
@@ -42,7 +39,7 @@
   const onMouseDown = (event: MouseEvent) => {
     event.preventDefault()
     event.stopPropagation()
-    curComponent.value = props.element
+    componentStore.setCurComponent(props.element)
     // componentStore.$patch((state) => {
     //   state.curComponent = props.element
     // })
@@ -70,8 +67,8 @@
       }
       // style.left = movePos.x
       // style.top = movePos.y
-      curComponent.value!.x = movePos.x
-      curComponent.value!.y = movePos.y
+      componentStore.curComponent!.x = movePos.x
+      componentStore.curComponent!.y = movePos.y
       style.value.transform = `translate3d(${movePos.x}px, ${movePos.y}px, 0)`
     }, 50)
 
@@ -85,9 +82,23 @@
     document.addEventListener('mouseup', handleMouseUp)
   }
 
+  const isRefresh = ref(true)
+
+  // componentStore.$subscribe()
+
+  watch(
+    () => componentStore.curComponent,
+    () => {
+      console.log('cur update')
+      isRefresh.value = false
+      nextTick(() => {
+        isRefresh.value = true
+      })
+    }
+  )
+
   const points = computed(() => {
-    console.log('curComponent.value update ', curComponent.value)
-    if (curComponent.value) {
+    if (componentStore.curComponent) {
       return [
         {
           direction: 'l',
@@ -137,13 +148,15 @@
   >
     <slot></slot>
   </div>
-  <ShapePoint
-    v-for="point in points"
-    :key="point.direction"
-    :direction="point.direction"
-    :cursor="point.cursor"
-    :cur-component="curComponent"
-  ></ShapePoint>
+  <template v-if="isRefresh">
+    <ShapePoint
+      v-for="point in points"
+      :key="point.direction"
+      :direction="point.direction"
+      :cursor="point.cursor"
+      :cur-component="componentStore.curComponent"
+    ></ShapePoint>
+  </template>
 </template>
 
 <style lang="scss" scoped>

@@ -3,6 +3,7 @@
   import Editor from '../components/Editor/index.vue'
   import WidgetList from '../components/WidgetList.vue'
   import StylesPanel from '../components/panel/StylesPanel.vue'
+  import Calibration from '../components/Editor/Calibration.vue'
 </script>
 
 <template>
@@ -16,6 +17,8 @@
           content-style="padding: 24px;"
           class="bg-gray-200 h-screen"
         >
+          <Calibration direction="up"></Calibration>
+          <Calibration direction="left"></Calibration>
           <Editor />
         </n-layout-content>
         <n-layout-sider

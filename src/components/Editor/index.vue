@@ -70,7 +70,6 @@
         (component.style.height as number) +
         'px'
     }
-    console.log(component, 'component')
     componentList.push(component)
   }
 
@@ -93,8 +92,6 @@
   }
 
   const onMouseDown = (event: MouseEvent) => {
-    console.log(event, 'event')
-    console.log('mouse down')
     if (event.button !== 2) {
       componentStore.curComponent = null
     }

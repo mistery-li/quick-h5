@@ -1,6 +1,5 @@
 <script setup lang="ts">
-  import { computed } from 'vue'
-  import { storeToRefs } from 'pinia'
+  import { computed, watch } from 'vue'
   import {
     NTag,
     NH2,
@@ -9,6 +8,7 @@
     NUpload,
     NFormItem,
     NInputNumber,
+    NInput,
     NSelect,
     NColorPicker,
   } from 'naive-ui'
@@ -17,14 +17,20 @@
   import { stylesMap } from '../../config/styles'
 
   const componentStore = useComponentStore()
-  const { curComponent } = storeToRefs(componentStore)
+  const curComponent = componentStore.curComponent
+  watch(
+    () => componentStore.curComponent,
+    (val) => {
+      console.log(val, 'val')
+    }
+  )
 
   const styleKeys = computed(
     () =>
-      curComponent.value &&
+      componentStore.curComponent &&
       (
-        Object.keys(curComponent.value.style) as Array<
-          keyof typeof curComponent.value.style
+        Object.keys(componentStore.curComponent.style) as Array<
+          keyof typeof componentStore.curComponent.style
         >
       ).filter(
         (key) => !['transform', 'width', 'height', 'left', 'top'].includes(key)
@@ -33,7 +39,7 @@
 </script>
 
 <template>
-  <div v-if="!curComponent">
+  <div v-if="!componentStore.curComponent">
     <n-result
       status="404"
       title="还没有数据呢"
@@ -45,11 +51,12 @@
   <div v-else>
     <div class="flex justify-center">
       <n-h2>属性设置</n-h2>
-      <n-tag class="ml-2" type="info"> {{ curComponent.label }}组件 </n-tag>
+      <n-tag class="ml-2" type="info">
+        {{ componentStore.curComponent.label }}组件
+      </n-tag>
     </div>
-    {{ JSON.stringify(curComponent, null, 2) }}
     <n-form
-      :model="curComponent"
+      :model="componentStore.curComponent"
       label-placement="left"
       size="medium"
       :label-width="80"
@@ -57,6 +64,11 @@
         maxWidth: '640px',
       }"
     >
+      <n-form-item label="输入文案" patch="propValue">
+        <n-input
+          v-model:value="componentStore.curComponent.propValue"
+        ></n-input>
+      </n-form-item>
       <n-form-item label="上传图片" path="propValue">
         <n-upload
           :max="1"
@@ -74,16 +86,11 @@
           点击上传
         </n-upload>
       </n-form-item>
-      <!-- <n-form-item label="圆角" path="style.borderRadius">
-        <n-input-number
-          v-model:value="curComponent.style.borderRadius"
-        ></n-input-number>
-      </n-form-item> -->
       <template v-for="styleKey in styleKeys" :key="styleKey">
         <n-form-item :label="stylesMap[(styleKey as any)]">
           <n-select
             v-if="styleKey === 'textAlign'"
-            v-model:value="curComponent.style.textAlign"
+            v-model:value="componentStore.curComponent.style.textAlign"
             placeholder="Select"
             :options="[
               { label: '左边', value: 'left' },
@@ -93,12 +100,12 @@
           />
           <n-color-picker
             v-else-if="styleKey.includes('color')"
-            v-model:value="curComponent.style[styleKey]"
+            v-model:value="componentStore.curComponent.style[styleKey]"
           >
           </n-color-picker>
           <n-input-number
             v-else
-            v-model:value="curComponent.style[styleKey]"
+            v-model:value="componentStore.curComponent.style[styleKey]"
           ></n-input-number>
         </n-form-item>
       </template>

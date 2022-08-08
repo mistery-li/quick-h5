@@ -13,9 +13,9 @@ export const useComponentStore = defineStore('component', {
       curComponent: null,
       components: [],
     } as ComponentState),
-  getters: {
-    getComponentList(): IComponent[] {
-      return this.components
+  actions: {
+    setCurComponent(curComponent: IComponent) {
+      this.curComponent = curComponent
     },
   },
 })
