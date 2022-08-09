@@ -16,6 +16,7 @@
     "lint:style:check": "stylelint ./src/**/*.{css,vue}"
   },
   "dependencies": {
+    "@vueuse/core": "^9.1.0",
     "@vueuse/head": "^0.7.8",
     "lodash": "^4.17.21",
     "naive-ui": "^2.32.1",

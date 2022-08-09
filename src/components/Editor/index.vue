@@ -13,6 +13,7 @@
 
   import { getStyle } from '../../utils/utils'
   import { useComponentStore } from '../../store/component'
+  import MarkLine from './MarkLine.vue'
 
   const defaultSize = reactive({
     width: '375px',
@@ -108,6 +109,7 @@
     @dragover="onDragOVer"
     @mousedown="onMouseDown"
   >
+    <!-- <MarkLine :threshold="5"></MarkLine> -->
     <WidgetShape
       v-for="(item, index) in componentList"
       :key="item.uuid"

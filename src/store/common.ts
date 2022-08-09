@@ -8,6 +8,8 @@ export const useCommonStore = defineStore('common', {
         height: '800px',
       },
       editorRect: document.getElementById('editor')?.getBoundingClientRect(),
+      isMoveStart: false,
+      isMove: false,
     }
   },
 })
