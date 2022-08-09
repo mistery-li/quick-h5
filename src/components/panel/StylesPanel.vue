@@ -18,12 +18,6 @@
 
   const componentStore = useComponentStore()
   const curComponent = componentStore.curComponent
-  watch(
-    () => componentStore.curComponent,
-    (val) => {
-      console.log(val, 'val')
-    }
-  )
 
   const styleKeys = computed(
     () =>
@@ -49,6 +43,7 @@
     </n-result>
   </div>
   <div v-else>
+    {{ JSON.stringify(componentStore.curComponent) }}
     <div class="flex justify-center">
       <n-h2>属性设置</n-h2>
       <n-tag class="ml-2" type="info">

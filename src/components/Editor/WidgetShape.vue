@@ -1,17 +1,20 @@
 <script setup lang="ts">
-  import { computed, ref, watch, nextTick } from 'vue'
+  import { computed, ref, watch, nextTick, reactive } from 'vue'
   import type { CSSProperties } from 'vue'
   import { throttle } from 'lodash'
 
   import { IComponent } from '../../types'
   import ShapePoint from './ShapePoint.vue'
   import { useComponentStore } from '../../store/component'
+  import { useCommonStore } from '../../store/common'
+  import MarkerLine from './MarkerLine.vue'
 
   const props = defineProps<{
     element: IComponent
     zIndex: number
     style: CSSProperties
   }>()
+
   const shapeRef = ref<HTMLElement>()
 
   const componentStore = useComponentStore()
@@ -36,14 +39,22 @@
 
   const style = computed(() => props.element.style)
 
+  const commonStore = useCommonStore()
+
+  const moveState = reactive({
+    isStart: false,
+    isMove: false,
+    pos: {
+      x: 0,
+      y: 0,
+    },
+  })
+
   const onMouseDown = (event: MouseEvent) => {
     event.preventDefault()
     event.stopPropagation()
     componentStore.setCurComponent(props.element)
-    // componentStore.$patch((state) => {
-    //   state.curComponent = props.element
-    // })
-
+    moveState.isStart = true
     const editorRect = document
       .getElementById('editor')
       ?.getBoundingClientRect()
@@ -52,6 +63,7 @@
     const { offsetX, offsetY } = event
 
     const handleMove = throttle((moveEvent: MouseEvent) => {
+      commonStore.isMove = true
       const { clientX: moveX, clientY: moveY } = moveEvent
       const elemBelow = document.elementFromPoint(event.clientX, event.clientY)
       if (!elemBelow) return
@@ -65,15 +77,19 @@
         x: transX < 0 ? 0 : transX > maxMove.x ? maxMove.x : transX,
         y: transY < 0 ? 0 : transY,
       }
-      // style.left = movePos.x
-      // style.top = movePos.y
       componentStore.curComponent!.x = movePos.x
       componentStore.curComponent!.y = movePos.y
       style.value.transform = `translate3d(${movePos.x}px, ${movePos.y}px, 0)`
+      moveState.pos = {
+        x: movePos.x,
+        y: movePos.y,
+      }
     }, 50)
 
     const handleMouseUp = () => {
       console.log('up')
+      moveState.isStart = false
+      moveState.isMove = false
       document.removeEventListener('mousemove', handleMove)
       document.removeEventListener('mouseup', handleMouseUp)
     }
@@ -148,6 +164,11 @@
   >
     <slot></slot>
   </div>
+  <MarkerLine
+    :is-start="moveState.isStart"
+    :is-move="moveState.isMove"
+    :pos="moveState.pos"
+  ></MarkerLine>
   <template v-if="isRefresh">
     <ShapePoint
       v-for="point in points"
@@ -162,7 +183,6 @@
 <style lang="scss" scoped>
   .shape {
     position: absolute;
-    /* border: 1px solid rgb(118, 200, 233); */
 
     &:hover {
       cursor: move;

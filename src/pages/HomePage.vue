@@ -24,6 +24,7 @@
         <n-layout-sider
           collapse-mode="width"
           :collapsed-width="0"
+          :default-collapsed="true"
           :width="350"
           :native-scrollbar="true"
           show-trigger="arrow-circle"

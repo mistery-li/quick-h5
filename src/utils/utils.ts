@@ -29,3 +29,31 @@ export function getStyle(
 
   return result
 }
+
+export const getMaxDistance = (arr: number[]) => {
+  console.log(arr, 'getMaxDistance arr')
+  const num = arr.sort((a, b) => a - b)
+  return num[num.length - 1] - num[0]
+}
+
+export const unique = <T>(
+  array: T[],
+  compare = (a: number, b: number) => a === b
+) => {
+  const result = []
+  for (let i = 0, len = array.length; i < len; i++) {
+    const current = array[i]
+    if (result.findIndex((v) => compare(v, current)) === -1) {
+      result.push(current)
+    }
+  }
+  return result
+}
+
+export const checkArrayWithPush = (target, key, value) => {
+  if (Array.isArray(target[key])) {
+    target[key].push(value)
+  } else {
+    target[key] = [value]
+  }
+}
