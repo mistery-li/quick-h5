@@ -68,6 +68,7 @@
   watch(
     () => props.isMove,
     (val) => {
+      console.log(val, 'val')
       if (!val) {
         markerlines.indices = []
         markerlines.hLines = []
