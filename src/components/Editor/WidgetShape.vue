@@ -63,7 +63,7 @@
     const { offsetX, offsetY } = event
 
     const handleMove = throttle((moveEvent: MouseEvent) => {
-      commonStore.isMove = true
+      moveState.isMove = true
       const { clientX: moveX, clientY: moveY } = moveEvent
       const elemBelow = document.elementFromPoint(event.clientX, event.clientY)
       if (!elemBelow) return
