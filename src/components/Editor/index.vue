@@ -13,7 +13,7 @@
 
   import { getStyle } from '../../utils/utils'
   import { useComponentStore } from '../../store/component'
-  import MarkLine from './MarkLine.vue'
+  import { useCommonStore } from '../../store/common'
 
   const defaultSize = reactive({
     width: '375px',
@@ -22,14 +22,14 @@
 
   const componentStore = useComponentStore()
 
-  const componentList = componentStore.components
-
   const editorRef = ref<HTMLElement | null>(null)
 
   let editorRect: DOMRect | undefined
   onMounted(() => {
     editorRect = editorRef.value?.getBoundingClientRect()
   })
+
+  const commonStore = useCommonStore()
 
   const onDrop = (event: DragEvent) => {
     event.preventDefault()
@@ -71,7 +71,7 @@
         (component.style.height as number) +
         'px'
     }
-    componentList.push(component)
+    componentStore.components.push(component)
   }
 
   // const curComponent = ref<IComponent | null>(null)
@@ -105,13 +105,14 @@
     ref="editorRef"
     :style="defaultSize"
     class="bg-white m-auto relative"
+    :class="[commonStore.isEdit ? 'edit-grid-bg' : '']"
     @drop="onDrop"
     @dragover="onDragOVer"
     @mousedown="onMouseDown"
   >
     <!-- <MarkLine :threshold="5"></MarkLine> -->
     <WidgetShape
-      v-for="(item, index) in componentList"
+      v-for="(item, index) in componentStore.components"
       :key="item.uuid"
       :style="getComponentStyle(item.style)"
       :z-index="index"
@@ -128,7 +129,7 @@
 </template>
 
 <style lang="scss" scoped>
-  #editor {
+  .edit-grid-bg {
     background-size: 15.625px 15.625px;
     background-repeat: repeat;
     background-image: linear-gradient(

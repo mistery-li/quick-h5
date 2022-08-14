@@ -1,14 +1,9 @@
 <script setup lang="ts">
-  import { computed, reactive } from 'vue'
+  import { computed } from 'vue'
 
   const props = defineProps<{
     direction: 'up' | 'left' | 'right'
   }>()
-
-  const lineSize = reactive({
-    width: 0,
-    height: 0,
-  })
 
   const lines = computed(() => {
     const maxWidth = props.direction === 'up' ? 1050 : 1000
@@ -59,7 +54,7 @@
       display: flex;
       gap: 9px;
       padding-bottom: 50px;
-      position: fixed;
+      position: absolute;
       .y-line-item {
         background-color: rgb(204, 204, 204);
         width: 6px;
