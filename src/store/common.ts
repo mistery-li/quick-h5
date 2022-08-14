@@ -8,6 +8,7 @@ export const useCommonStore = defineStore('common', {
         height: '800px',
       },
       editorRect: document.getElementById('editor')?.getBoundingClientRect(),
+      isEdit: true,
       isMoveStart: false,
       isMove: false,
     }

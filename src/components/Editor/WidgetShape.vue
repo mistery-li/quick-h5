@@ -53,6 +53,7 @@
   const onMouseDown = (event: MouseEvent) => {
     event.preventDefault()
     event.stopPropagation()
+    if (!commonStore.isEdit) return
     componentStore.setCurComponent(props.element)
     moveState.isStart = true
     const editorRect = document
@@ -160,6 +161,7 @@
     ref="shapeRef"
     :style="getShapeStyle(style)"
     class="shape"
+    :class="[commonStore.isEdit ? 'edit' : '']"
     @mousedown="onMouseDown"
   >
     <slot></slot>
@@ -183,7 +185,8 @@
 <style lang="scss" scoped>
   .shape {
     position: absolute;
-
+  }
+  .edit {
     &:hover {
       cursor: move;
     }

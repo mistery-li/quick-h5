@@ -14,7 +14,10 @@
 </script>
 
 <template>
-  <div class="component-list flex flex-wrap gap-1" @dragstart="handleDragStart">
+  <div
+    class="component-list pl-4 flex flex-wrap gap-1"
+    @dragstart="handleDragStart"
+  >
     <div
       v-for="(item, index) in components"
       :key="index"
