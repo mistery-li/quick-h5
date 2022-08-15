@@ -17,5 +17,16 @@ export const useComponentStore = defineStore('component', {
     setCurComponent(curComponent: IComponent) {
       this.curComponent = curComponent
     },
+    setComponentData(data: IComponent) {
+      if (data) {
+        const index = this.components.findIndex(
+          (item) => item.uuid === data.uuid
+        )
+        console.log(JSON.stringify([this.components, data]), 'components')
+        console.log(index, 'indx')
+
+        this.components.splice(index, 1, data)
+      }
+    },
   },
 })

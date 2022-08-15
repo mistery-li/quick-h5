@@ -1,4 +1,5 @@
 import { defineStore } from 'pinia'
+import { IComponent } from '../types'
 
 export const useCommonStore = defineStore('common', {
   state: () => {
@@ -11,6 +12,17 @@ export const useCommonStore = defineStore('common', {
       isEdit: true,
       isMoveStart: false,
       isMove: false,
+      history: [] as any,
+      counter: -1,
     }
+  },
+  actions: {
+    addHistory(item: IComponent, type: 'add' | 'update') {
+      this.history.push({
+        type,
+        value: item,
+      })
+      this.counter++
+    },
   },
 })
