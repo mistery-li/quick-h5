@@ -71,6 +71,7 @@
         (component.style.height as number) +
         'px'
     }
+    commonStore.addHistory(component, 'add')
     componentStore.components.push(component)
   }
 
