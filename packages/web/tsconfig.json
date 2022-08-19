@@ -1,10 +1,13 @@
 {
+  "extends": "../../tsconfig.settting.json",
   "compilerOptions": {
+    "composite": true,
     "target": "ESNext",
     "useDefineForClassFields": true,
     "module": "ESNext",
     "moduleResolution": "Node",
     "strict": true,
+    "jsx": "preserve",
     "sourceMap": true,
     "resolveJsonModule": true,
     "isolatedModules": true,
@@ -13,10 +16,9 @@
     "skipLibCheck": true
   },
   "include": [
-    "packages/front-end/src/**/*.ts",
-    "packages/front-end/src/**/*.d.ts",
-    "packages/front-end/src/**/*.tsx",
-    "packages/front-end/src/**/*.vue"
-  ],
-  "references": [{ "path": "./tsconfig.node.json" }]
+    "packages/web/src/**/*.ts",
+    "packages/web/src/**/*.d.ts",
+    "packages/web/src/**/*.tsx",
+    "packages/web/src/**/*.vue"
+  ]
 }
