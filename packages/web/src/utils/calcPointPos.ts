@@ -1,4 +1,4 @@
-import { CSSProperties } from 'vue'
+import { customStyle } from '../types'
 
 export type pos = {
   x: number
@@ -18,11 +18,7 @@ const funcs = {
 
 type direKeys = 'lt' | 't' | 'rt' | 'r' | 'rb' | 'b' | 'lb' | 'l'
 
-function calculateLeftTop(
-  style: CSSProperties,
-  curPositon: pos,
-  startPos: pos
-) {
+function calculateLeftTop(style: customStyle, curPositon: pos, startPos: pos) {
   const distancePos = {
     x: curPositon.x,
     y: curPositon.y,
@@ -56,11 +52,7 @@ function calculateLeftTop(
   return { isMove: true, width, height, x, y, pointPos }
 }
 
-function calculateRightTop(
-  style: CSSProperties,
-  curPositon: pos,
-  startPos: pos
-) {
+function calculateRightTop(style: customStyle, curPositon: pos, startPos: pos) {
   const distancePos = {
     x: Number(style.width) + curPositon.x,
     y: curPositon.y,
@@ -85,7 +77,7 @@ function calculateRightTop(
 }
 
 function calculateRightBottom(
-  style: CSSProperties,
+  style: customStyle,
   curPositon: pos,
   startPos: pos
 ) {
@@ -108,7 +100,7 @@ function calculateRightBottom(
 }
 
 function calculateLeftBottom(
-  style: CSSProperties,
+  style: customStyle,
   curPositon: pos,
   startPos: pos
 ) {
@@ -148,7 +140,7 @@ function calculateLeftBottom(
  * @param pointInfo 圆点样式
  * @returns
  */
-function calculateTop(style: CSSProperties, curPositon: pos, startPos: pos) {
+function calculateTop(style: customStyle, curPositon: pos, startPos: pos) {
   const distance = curPositon.y
   let y = startPos.y + distance
   const newHeight = Number(style.height) - distance
@@ -171,7 +163,7 @@ function calculateTop(style: CSSProperties, curPositon: pos, startPos: pos) {
   return { isMove: true, width, height, x, y, pointPos }
 }
 
-function calculateRight(style: CSSProperties, curPositon: pos, startPos: pos) {
+function calculateRight(style: customStyle, curPositon: pos, startPos: pos) {
   const distance = Number(style.width) + curPositon.x
   const x = distance < 10 ? 10 : distance > 375 ? 375 : distance
   const newWidth = x
@@ -185,7 +177,7 @@ function calculateRight(style: CSSProperties, curPositon: pos, startPos: pos) {
   return { isMove: false, width, height, x, y, pointPos }
 }
 
-function calculateBottom(style: CSSProperties, curPositon: pos, startPos: pos) {
+function calculateBottom(style: customStyle, curPositon: pos, startPos: pos) {
   const distance = curPositon.y
   let y = startPos.y
   const newHeight = Number(style.height) + distance
@@ -203,7 +195,7 @@ function calculateBottom(style: CSSProperties, curPositon: pos, startPos: pos) {
   return { isMove: false, width, height, x, y, pointPos }
 }
 
-function calculateLeft(style: CSSProperties, curPositon: pos, startPos: pos) {
+function calculateLeft(style: customStyle, curPositon: pos, startPos: pos) {
   const distance = curPositon.x
   let x = startPos.x + distance
   const newWidth = Number(style.width) - distance
@@ -226,7 +218,7 @@ function calculateLeft(style: CSSProperties, curPositon: pos, startPos: pos) {
 
 export default function calculateComponentPositonAndSize(
   name: direKeys,
-  style: CSSProperties,
+  style: customStyle,
   curPositon: pos,
   componentPos: pos
 ) {

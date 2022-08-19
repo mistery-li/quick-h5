@@ -67,7 +67,7 @@
     const { offsetX, offsetY } = event
 
     let needToRecord = true
-    const startData = cloneDeep(store.curComp)
+    const startData = cloneDeep(store.curComp!)
 
     const handleMove = (moveEvent: MouseEvent) => {
       moveState.isMove = true
@@ -108,7 +108,7 @@
       moveState.isMove = false
       store.addHistory({
         type: 'update',
-        value: [startData, cloneDeep(store.curComp)],
+        value: [startData, cloneDeep(store.curComp!)],
       })
       document.removeEventListener('mousemove', handleMove)
       document.removeEventListener('mouseup', handleMouseUp)

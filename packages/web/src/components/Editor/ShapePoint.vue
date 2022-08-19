@@ -4,7 +4,7 @@
 
   import { getNeedsPxStyles } from '../../utils/styles'
   import calculateComponentPositonAndSize from '../../utils/calcPointPos'
-  import { IComponent, direKeys, StyleMap } from '../../types'
+  import { IComponent, direKeys, customStyle } from '../../types'
   import { useStore } from '../../store'
 
   const props = defineProps<{
@@ -80,9 +80,9 @@
 
     let moveCount = 0
 
-    const _style = cloneDeep(store.curComp?.style)
+    const _style = cloneDeep(store.curComp?.style!)
 
-    const startData = cloneDeep(store.curComp)
+    const startData = cloneDeep(store.curComp!)
 
     const handleComponentResize = (moveEvent: MouseEvent) => {
       moveCount++
@@ -97,11 +97,11 @@
         _style,
         curPositon,
         {
-          x: _style.left,
-          y: _style.top,
+          x: _style.left as number,
+          y: _style.top as number,
         }
       )
-      const style: StyleMap = {
+      const style: customStyle = {
         ..._style,
         width,
         height,
@@ -118,7 +118,7 @@
     const handleMouseUp = () => {
       store.addHistory({
         type: 'update',
-        value: [startData, cloneDeep(store.curComp)],
+        value: [startData, cloneDeep(store.curComp!)],
       })
       document.removeEventListener('mousemove', handleComponentResize)
       document.removeEventListener('mouseup', handleMouseUp)

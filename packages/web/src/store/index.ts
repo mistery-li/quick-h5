@@ -1,7 +1,7 @@
 import { defineStore } from 'pinia'
 import { CSSProperties } from 'vue'
 
-import { IComponent, StyleMap } from '../types'
+import { IComponent, customStyle } from '../types'
 import { swap } from '../utils/utils'
 type undoRedo =
   | {
@@ -48,7 +48,7 @@ export const useStore = defineStore('editor', {
       for (let index = 0; index < comps.length; index++) {
         if (comps[index].uuid === this.curComp!.uuid) {
           comps[index] = {
-            ...this.curComp,
+            ...this.curComp!,
             style: {
               ...this.curComp?.style,
             },
@@ -63,42 +63,42 @@ export const useStore = defineStore('editor', {
       this.updateComps()
     },
     deleteCurComp() {
-      this.comps = this.comps.filter((comp) => comp.uuid !== this.curComp.uuid)
+      this.comps = this.comps.filter((comp) => comp.uuid !== this.curComp?.uuid)
       this.curComp = null
     },
     setCurCompToTop() {
       const index = this.comps.findIndex(
-        (comp) => comp.uuid === this.curComp.uuid
+        (comp) => comp.uuid === this.curComp?.uuid
       )
       this.comps.splice(index, 1)
-      this.comps.push(this.curComp)
+      this.comps.push(this.curComp!)
     },
     setCurCompToUp() {
       const index = this.comps.findIndex(
-        (comp) => comp.uuid === this.curComp.uuid
+        (comp) => comp.uuid === this.curComp?.uuid
       )
       console.log(index, 'index')
       swap(this.comps, index, index + 1)
     },
     setCurCompToDown() {
       const index = this.comps.findIndex(
-        (comp) => comp.uuid === this.curComp.uuid
+        (comp) => comp.uuid === this.curComp?.uuid
       )
       console.log(index, 'index')
       swap(this.comps, index, index - 1)
     },
     setCurCompToBottom() {
       const index = this.comps.findIndex(
-        (comp) => comp.uuid === this.curComp.uuid
+        (comp) => comp.uuid === this.curComp?.uuid
       )
       this.comps.splice(index, 1)
-      this.comps.unshift(this.curComp)
+      this.comps.unshift(this.curComp!)
     },
-    updateSelectedCompStyle(_style: StyleMap) {
+    updateSelectedCompStyle(_style: customStyle) {
       this.curComp!.style = { ..._style }
       this.updateComps()
     },
-    updateSelectedCompDataAnyStyles(data: any, _styles: StyleMap) {
+    updateSelectedCompDataAnyStyles(data: any, _styles: customStyle) {
       this.curComp = {
         ...this.curComp,
         ...data,

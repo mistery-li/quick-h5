@@ -1,8 +1,8 @@
 import type { CSSProperties } from 'vue'
-import { StyleMap } from '../types'
+import { customStyle } from '../types'
 
 export function getStyle(
-  style: StyleMap,
+  style: customStyle,
   filter: (keyof CSSProperties)[] = []
 ): CSSProperties {
   const needUnit = [
@@ -50,7 +50,7 @@ export const unique = (
   return result
 }
 
-export const checkArrayWithPush = (target, key, value) => {
+export const checkArrayWithPush = (target: any, key: any, value: any) => {
   if (Array.isArray(target[key])) {
     target[key].push(value)
   } else {
