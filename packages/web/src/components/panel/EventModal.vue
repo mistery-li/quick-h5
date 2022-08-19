@@ -68,7 +68,6 @@
   const message = useMessage()
 
   const handleAddEvents = () => {
-    console.log(form, 'form')
     store.curComp?.events.push({
       uuid: uuidv4(),
       open: false,

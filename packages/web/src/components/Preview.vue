@@ -1,5 +1,5 @@
 <script setup lang="ts">
-  import { ref, onBeforeMount, watch, reactive } from 'vue'
+  import { ref, onBeforeMount, watch, reactive, Component } from 'vue'
   import { NModal, NForm, NFormItem, NInput, NButton } from 'naive-ui'
 
   import VButton from './Widget/VButton.vue'
@@ -7,7 +7,7 @@
   import Picture from './Widget/Picture.vue'
 
   import { getStyle } from '../utils/utils'
-  import { StyleMap } from '../types'
+  import { customStyle } from '../types'
 
   const props = defineProps<{
     modelValue: boolean
@@ -41,12 +41,12 @@
     JSON.parse(localStorage.getItem('previewData') || '') || []
   )
 
-  const getComponentStyle = (style: StyleMap) => {
+  const getComponentStyle = (style: customStyle) => {
     const styles = getStyle(style)
     return styles
   }
 
-  const componentMap = {
+  const componentMap: { [key: string]: Component } = {
     VButton,
     VText,
     Picture,

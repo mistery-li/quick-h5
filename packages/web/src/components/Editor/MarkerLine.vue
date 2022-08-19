@@ -326,7 +326,7 @@
     return { x, y }
   }
 
-  const calcMarkerline = ({ x, y }) => {
+  const calcMarkerline = ({ x, y }: { x: number; y: number }) => {
     const index = store.comps.findIndex(
       (comp) => comp.uuid === store.curComp?.uuid
     )

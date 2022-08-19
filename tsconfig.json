@@ -13,10 +13,11 @@
     "skipLibCheck": true
   },
   "include": [
-    "packages/front-end/src/**/*.ts",
-    "packages/front-end/src/**/*.d.ts",
-    "packages/front-end/src/**/*.tsx",
-    "packages/front-end/src/**/*.vue"
+    "packages/web/src/**/*.ts",
+    "packages/web/src/**/*.d.ts",
+    "packages/web/src/**/*.tsx",
+    "packages/web/src/**/*.vue"
   ],
+  "exclude": ["node_modules"],
   "references": [{ "path": "./tsconfig.node.json" }]
 }

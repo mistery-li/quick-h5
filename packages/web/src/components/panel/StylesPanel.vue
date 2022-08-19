@@ -23,11 +23,11 @@
   import { stylesMap } from '../../config/styles'
   import { useStore } from '../../store'
   import EventModal from './EventModal.vue'
-  import { StyleMap } from '../../types'
+  import { customStyle } from '../../types'
 
   const store = useStore()
 
-  const styleKeys = ref<StyleMap[]>([])
+  const styleKeys = ref<(keyof customStyle)[]>([])
 
   watch(
     () => store.curComp,
@@ -123,12 +123,14 @@
                 v-else-if="
                   styleKey.includes('color') || styleKey.includes('Color')
                 "
-                v-model:value="store.curComp.style[styleKey]"
+                v-model:value="(store.curComp.style[styleKey] as string)"
               >
               </n-color-picker>
               <n-input-number
                 v-else
-                v-model:value="store.curComp.style[styleKey]"
+                :step="styleKey === 'fontWeight' ? 100 : 1"
+                v-model:value="(store.curComp.style[styleKey] as number)"
+                :placeholder="styleKey"
               ></n-input-number>
             </n-form-item>
           </template>

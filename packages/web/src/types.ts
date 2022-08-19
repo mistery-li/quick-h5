@@ -5,7 +5,7 @@ export interface IComponent {
   // 组件
   component: string
   // 事件列表
-  events: unknown[]
+  events: Events[]
   // 坐标
   x: number
   y: number
@@ -15,10 +15,28 @@ export interface IComponent {
   propValue: any
   // 图标
   icon: string
-  style: StyleMap
+  style: customStyle
 }
 
-export type StyleMap = Partial<
+export type Events = {
+  data: {
+    type: string
+    jumpUrl: string
+    modal: {
+      title: string
+      width: number
+      height: number
+      confirmText: string
+      cancelText: string
+      confirmColor: string
+      confirmUrl: string
+    }
+  }
+  open: boolean
+  uuid: string
+}
+
+export type customStyle = Partial<
   Record<keyof CSSProperties, string | number | undefined>
 >
 
