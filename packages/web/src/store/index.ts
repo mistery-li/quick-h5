@@ -2,6 +2,7 @@ import { defineStore } from 'pinia'
 import { CSSProperties } from 'vue'
 
 import { IComponent, StyleMap } from '../types'
+import { swap } from '../utils/utils'
 type undoRedo =
   | {
       type: 'add'
@@ -60,6 +61,38 @@ export const useStore = defineStore('editor', {
     setSelectComp(data: null | IComponent) {
       this.curComp = data
       this.updateComps()
+    },
+    deleteCurComp() {
+      this.comps = this.comps.filter((comp) => comp.uuid !== this.curComp.uuid)
+      this.curComp = null
+    },
+    setCurCompToTop() {
+      const index = this.comps.findIndex(
+        (comp) => comp.uuid === this.curComp.uuid
+      )
+      this.comps.splice(index, 1)
+      this.comps.push(this.curComp)
+    },
+    setCurCompToUp() {
+      const index = this.comps.findIndex(
+        (comp) => comp.uuid === this.curComp.uuid
+      )
+      console.log(index, 'index')
+      swap(this.comps, index, index + 1)
+    },
+    setCurCompToDown() {
+      const index = this.comps.findIndex(
+        (comp) => comp.uuid === this.curComp.uuid
+      )
+      console.log(index, 'index')
+      swap(this.comps, index, index - 1)
+    },
+    setCurCompToBottom() {
+      const index = this.comps.findIndex(
+        (comp) => comp.uuid === this.curComp.uuid
+      )
+      this.comps.splice(index, 1)
+      this.comps.unshift(this.curComp)
     },
     updateSelectedCompStyle(_style: StyleMap) {
       this.curComp!.style = { ..._style }

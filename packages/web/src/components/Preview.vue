@@ -42,7 +42,7 @@
   )
 
   const getComponentStyle = (style: StyleMap) => {
-    const styles = getStyle(style, ['top', 'left', 'transform'])
+    const styles = getStyle(style)
     return styles
   }
 
@@ -72,7 +72,7 @@
               :is="componentMap[item.component]"
               class="component"
               :element="item"
-              :style="getComponentStyle(item.style)"
+              :style="{ ...getComponentStyle(item.style), zIndex: index }"
             ></component>
           </template>
         </div>
@@ -114,6 +114,9 @@
 <style lang="scss" scoped>
   .component-wrap {
     display: inline-block;
+  }
+  .component {
+    position: absolute;
   }
   .preview-container {
     position: relative;
