@@ -57,3 +57,10 @@ export const checkArrayWithPush = (target, key, value) => {
     target[key] = [value]
   }
 }
+
+export const swap = <T>(arr: T[], from: number, to: number) => {
+  console.log(arr, 'arrr0')
+  const test = arr.splice(from, 1, arr.splice(to, 1, arr[from])[0])
+  console.log(test, 'test')
+  console.log(arr, '1')
+}

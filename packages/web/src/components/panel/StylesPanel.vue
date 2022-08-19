@@ -32,6 +32,7 @@
   watch(
     () => store.curComp,
     (val) => {
+      if (!val) return
       // @ts-ignore
       styleKeys.value = Object.keys(val?.style).filter(
         (key) => !['transform', 'width', 'height', 'left', 'top'].includes(key)

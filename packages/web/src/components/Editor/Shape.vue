@@ -1,7 +1,8 @@
 <script setup lang="ts">
-  import { ref, watch, nextTick, reactive } from 'vue'
+  import { ref, reactive } from 'vue'
   import type { CSSProperties } from 'vue'
   import { cloneDeep } from 'lodash'
+  import { NPopover, NList, NListItem, NButton } from 'naive-ui'
 
   import { IComponent } from '../../types'
   import { useCommonStore } from '../../store/common'
@@ -116,14 +117,88 @@
     document.addEventListener('mousemove', handleMove)
     document.addEventListener('mouseup', handleMouseUp)
   }
+
+  const showRightMenu = ref(false)
+  const rightMenuPos = reactive({
+    x: 0,
+    y: 0,
+  })
+  const onContextMenu = (comp: IComponent, e: MouseEvent) => {
+    e.preventDefault()
+    store.setSelectComp(comp)
+    rightMenuPos.x = e.clientX
+    rightMenuPos.y = e.clientY
+    showRightMenu.value = true
+  }
+  /**
+   * @todo refactor to useCommand 执行命令执行不同操作，并添加history
+   */
+  const onCloseRightMenu = () => {
+    showRightMenu.value = false
+  }
+
+  const onDeleteComp = () => {
+    store.deleteCurComp()
+    onCloseRightMenu()
+  }
+
+  const onSetTop = () => {
+    store.setCurCompToTop()
+    onCloseRightMenu()
+  }
+  const onSetBottom = () => {
+    store.setCurCompToBottom()
+    onCloseRightMenu()
+  }
+
+  const setUp = () => {
+    store.setCurCompToUp()
+    onCloseRightMenu()
+  }
+  const setDown = () => {
+    store.setCurCompToDown()
+    onCloseRightMenu()
+  }
 </script>
 
 <template>
+  <n-popover
+    :show="showRightMenu"
+    :x="rightMenuPos.x"
+    :y="rightMenuPos.y"
+    placement="right-end"
+    @clickoutside="onCloseRightMenu"
+    trigger="manual"
+  >
+    <n-list>
+      <n-list-item>
+        <n-button quaternary> 复制 </n-button>
+      </n-list-item>
+      <n-list-item>
+        <n-button quaternary @click="onDeleteComp">
+          删除
+        </n-button></n-list-item
+      >
+      <n-list-item>
+        <n-button quaternary @click="onSetTop"> 置顶 </n-button></n-list-item
+      >
+      <n-list-item>
+        <n-button quaternary @click="onSetBottom"> 置底 </n-button></n-list-item
+      >
+      <n-list-item>
+        <n-button quaternary @click="setUp"> 上移 </n-button></n-list-item
+      >
+      <n-list-item>
+        <n-button quaternary @click="setDown"> 下移 </n-button></n-list-item
+      >
+    </n-list>
+  </n-popover>
   <div
     ref="shapeRef"
     :style="getShapeStyle(props.element?.style)"
     class="shape"
     :class="[commonStore.isEdit ? 'edit' : '']"
+    @contextmenu="onContextMenu(props.element, $event)"
     @mousedown="onMouseDown"
   >
     <slot></slot>
@@ -143,5 +218,8 @@
     &:hover {
       cursor: move;
     }
+  }
+  ::v-deep .n-list-item {
+    padding: 0px;
   }
 </style>
