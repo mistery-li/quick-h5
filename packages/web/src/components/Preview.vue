@@ -1,5 +1,6 @@
 <script setup lang="ts">
-  import { ref, onBeforeMount, watch, reactive, Component } from 'vue'
+  import { ref, onBeforeMount, watch, reactive } from 'vue'
+  import type { Component } from 'vue'
   import { NModal, NForm, NFormItem, NInput, NButton } from 'naive-ui'
 
   import VButton from './Widget/VButton.vue'
@@ -7,7 +8,9 @@
   import Picture from './Widget/Picture.vue'
 
   import { getStyle } from '../utils/utils'
-  import { customStyle } from '../types'
+  import { customStyle, IComponent } from '../types'
+
+  type eventMap = {}
 
   const props = defineProps<{
     modelValue: boolean
@@ -37,9 +40,21 @@
     description: '',
   })
 
-  const components = ref(
-    JSON.parse(localStorage.getItem('previewData') || '') || []
-  )
+  const components: (IComponent & {
+    eventMap: { [name: string]: () => void }
+  })[] = JSON.parse(localStorage.getItem('previewData') || '') || []
+
+  const comps = components.map((comp) => {
+    const events = comp.events.filter((event) => !!event.open)
+    const eventMap: { [name: string]: () => void } = {}
+    events.forEach((event) => {
+      eventMap['onclick'] = function () {
+        window.location.href = event.params.jumpUrl || ''
+      }
+    })
+    comp.eventMap = eventMap
+    return comp
+  })
 
   const getComponentStyle = (style: customStyle) => {
     const styles = getStyle(style)
@@ -65,10 +80,9 @@
     <div class="flex justify-between" style="height: 800px">
       <div class="preview-container flex-shrink-0">
         <div class="mobile">
-          <!-- 直接渲染页面效果，保存依然 -->
-          <!-- 发布的时候构建真实页面 -->
-          <template v-for="(item, index) in components" :key="item.uuid">
+          <template v-for="(item, index) in comps" :key="item.uuid">
             <component
+              v-bind="{ ...item.eventMap }"
               :is="componentMap[item.component]"
               class="component"
               :element="item"

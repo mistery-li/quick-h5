@@ -24,6 +24,7 @@
   import { useStore } from '../../store'
   import EventModal from './EventModal.vue'
   import { customStyle } from '../../types'
+  import { EVENT_MAP } from '../../constans'
 
   const store = useStore()
 
@@ -150,24 +151,24 @@
             <tr v-for="(item, index) in store.curComp.events">
               <td>{{ index + 1 }}</td>
               <td><n-switch v-model:value="item.open"></n-switch></td>
-              <td>{{ item.data.type === 'jump' ? '跳转链接' : '打开弹窗' }}</td>
+              <td>{{ item.type === 'jump' ? '跳转链接' : '打开弹窗' }}</td>
             </tr>
           </tbody>
         </n-table>
 
         <n-collapse style="margin-top: 30px">
           <n-collapse-item
-            :title="`事件${index + 1}`"
+            :title="`${EVENT_MAP[item.type]}`"
             name="1"
             v-for="(item, index) in store.curComp.events"
           >
-            <template v-if="item.data.type === 'jump'">
+            <template v-if="item.type === 'jump'">
               <div class="tips bg-slate-200 p-2 mb-2">
                 举例：当点击时跳转到百度(https://www.baidu.com)
               </div>
               <n-input
                 placeholder="跳转地址"
-                v-model:value="item.data.jumpUrl"
+                v-model:value="item.params.jumpUrl"
               ></n-input>
             </template>
           </n-collapse-item>

@@ -15,11 +15,11 @@
     "lib": ["ESNext", "DOM"],
     "skipLibCheck": true
   },
-  // "include": [
-  //   "./packages/web/src/**/*.ts",
-  //   "./packages/web/src/**/*.d.ts",
-  //   "./packages/web/src/**/*.tsx",
-  //   "./packages/web/src/**/*.vue"
-  // ],
+  "include": [
+    "./src/**/*.ts",
+    "./src/**/*.d.ts",
+    "./src/**/*.tsx",
+    "./src/**/*.vue"
+  ],
   "exclude": ["node_modules"]
 }

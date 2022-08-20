@@ -9,7 +9,6 @@
   const isPreview = ref(false)
   const onPreview = () => {
     // componentStore.curComponent = null
-    console.log(store.comps, 'comps')
     localStorage.setItem('previewData', JSON.stringify(store.comps))
     isPreview.value = true
   }

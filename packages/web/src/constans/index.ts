@@ -62,3 +62,8 @@ export const COMPONENTS: IComponent[] = [
     },
   },
 ]
+
+export const EVENT_MAP = {
+  jump: '跳转动作',
+  modal: '弹窗动作',
+}
