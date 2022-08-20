@@ -29,6 +29,8 @@
   "devDependencies": {
     "@types/lodash": "^4.14.184",
     "@types/uuid": "^8.3.4",
+    "@vicons/ionicons5": "^0.12.0",
+    "@vicons/utils": "^0.1.4",
     "@vitejs/plugin-vue": "^3.0.0",
     "@vue/eslint-config-prettier": "^7.0.0",
     "@vue/eslint-config-typescript": "^11.0.0",

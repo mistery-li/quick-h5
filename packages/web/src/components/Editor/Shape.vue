@@ -5,7 +5,6 @@
   import { NPopover, NList, NListItem, NButton } from 'naive-ui'
 
   import { IComponent } from '../../types'
-  import { useCommonStore } from '../../store/common'
   import MarkerLine from './MarkerLine.vue'
   import { useStore } from '../../store'
 
@@ -40,8 +39,6 @@
     return result
   }
 
-  const commonStore = useCommonStore()
-
   const moveState = reactive({
     isStart: false,
     isMove: false,
@@ -54,7 +51,6 @@
   const onMouseDown = (event: MouseEvent) => {
     event.preventDefault()
     event.stopPropagation()
-    if (!commonStore.isEdit) return
     if (props.element.uuid !== store.curComp?.uuid) {
       store.setSelectComp(props.element)
     }
@@ -197,7 +193,7 @@
     ref="shapeRef"
     :style="getShapeStyle(props.element?.style)"
     class="shape"
-    :class="[commonStore.isEdit ? 'edit' : '']"
+    :class="props.element.uuid === store.curComp?.uuid ? 'active' : ''"
     @contextmenu="onContextMenu(props.element, $event)"
     @mousedown="onMouseDown"
   >
@@ -213,6 +209,9 @@
 <style lang="scss" scoped>
   .shape {
     position: absolute;
+  }
+  .active {
+    border: 1px solid #0ecac1;
   }
   .edit {
     &:hover {

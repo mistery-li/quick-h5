@@ -1,4 +1,5 @@
 <script setup lang="ts">
+  import { ref } from 'vue'
   import {
     NLayout,
     NLayoutSider,
@@ -10,8 +11,12 @@
   import Editor from '../components/Editor/index.vue'
   import WidgetList from '../components/WidgetList.vue'
   import StylesPanel from '../components/panel/StylesPanel.vue'
-  import Calibration from '../components/Editor/Calibration.vue'
   import Header from '../components/Header.vue'
+
+  const collapsed = ref(false)
+  const handleCollapse = () => {
+    collapsed.value = !collapsed.value
+  }
 </script>
 
 <template>
@@ -20,9 +25,19 @@
       <n-layout-header style="height: 60px" bordered>
         <Header></Header>
       </n-layout-header>
-      <n-layout has-sider size="">
-        <n-layout-sider bordered>
-          <WidgetList />
+      <n-layout has-sider>
+        <n-layout-sider
+          :onCollapse="handleCollapse"
+          collapse-mode="width"
+          :collapsed-width="80"
+          :default-collapsed="false"
+          :width="350"
+          :collapsed="collapsed"
+          :native-scrollbar="true"
+          show-trigger="arrow-circle"
+          bordered
+        >
+          <WidgetList v-model="collapsed" />
         </n-layout-sider>
         <n-layout has-sider sider-placement="right" style="height: 95vh">
           <n-layout-content content-style="padding: 24px;" class="bg-gray-200">

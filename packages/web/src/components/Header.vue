@@ -1,15 +1,23 @@
 <script setup lang="ts">
   import { computed, ref } from 'vue'
-  import { NSpace, NButton } from 'naive-ui'
+  import { NSpace, NButton, useMessage } from 'naive-ui'
 
   import Preview from './Preview.vue'
   import { useStore } from '../store'
 
   const store = useStore()
   const isPreview = ref(false)
+  const message = useMessage()
   const onPreview = () => {
-    // componentStore.curComponent = null
-    localStorage.setItem('previewData', JSON.stringify(store.comps))
+    if (store.comps.length === 0) {
+      message.warning('暂无可预览部件')
+      return
+    }
+    const previeData = {
+      data: store.page,
+      comps: store.comps,
+    }
+    sessionStorage.setItem('previewData', JSON.stringify(previeData))
     isPreview.value = true
   }
 

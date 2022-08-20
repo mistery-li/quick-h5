@@ -1,7 +1,14 @@
 <script setup lang="ts">
   import { ref, onBeforeMount, watch, reactive } from 'vue'
   import type { Component } from 'vue'
-  import { NModal, NForm, NFormItem, NInput, NButton } from 'naive-ui'
+  import {
+    NModal,
+    NForm,
+    NFormItem,
+    NInput,
+    NButton,
+    useMessage,
+  } from 'naive-ui'
 
   import VButton from './Widget/VButton.vue'
   import VText from './Widget/VText.vue'
@@ -9,8 +16,6 @@
 
   import { getStyle } from '../utils/utils'
   import { customStyle, IComponent } from '../types'
-
-  type eventMap = {}
 
   const props = defineProps<{
     modelValue: boolean
@@ -40,10 +45,15 @@
     description: '',
   })
 
-  const components: (IComponent & {
-    eventMap: { [name: string]: () => void }
-  })[] = JSON.parse(localStorage.getItem('previewData') || '') || []
-
+  const {
+    data,
+    comps: components,
+  }: {
+    data: { style: customStyle }
+    comps: (IComponent & {
+      eventMap: { [name: string]: () => void }
+    })[]
+  } = JSON.parse(sessionStorage.getItem('previewData') || '')
   const comps = components.map((comp) => {
     const events = comp.events.filter((event) => !!event.open)
     const eventMap: { [name: string]: () => void } = {}
@@ -66,6 +76,15 @@
     VText,
     Picture,
   }
+
+  const message = useMessage()
+
+  const onSave = () => {
+    message.success('保存成功')
+    setTimeout(() => {
+      emit('update:modelValue', false)
+    }, 2000)
+  }
 </script>
 
 <template>
@@ -80,15 +99,17 @@
     <div class="flex justify-between" style="height: 800px">
       <div class="preview-container flex-shrink-0">
         <div class="mobile">
-          <template v-for="(item, index) in comps" :key="item.uuid">
-            <component
-              v-bind="{ ...item.eventMap }"
-              :is="componentMap[item.component]"
-              class="component"
-              :element="item"
-              :style="{ ...getComponentStyle(item.style), zIndex: index }"
-            ></component>
-          </template>
+          <div class="preview-area" :style="data.style">
+            <template v-for="(item, index) in comps" :key="item.uuid">
+              <component
+                v-bind="{ ...item.eventMap }"
+                :is="componentMap[item.component]"
+                class="component"
+                :element="item"
+                :style="{ ...getComponentStyle(item.style), zIndex: index }"
+              ></component>
+            </template>
+          </div>
         </div>
       </div>
       <div>
@@ -117,7 +138,7 @@
             />
           </n-form-item>
           <div style="display: flex; justify-content: flex-end">
-            <n-button round> 保存 </n-button>
+            <n-button @click="onSave" type="primary"> 保存 </n-button>
           </div>
         </n-form>
       </div>
@@ -140,6 +161,10 @@
     width: 520px;
     height: 750px;
     box-sizing: content-box;
+  }
+  .preview-area {
+    width: 100%;
+    height: 100%;
   }
 
   .mobile {

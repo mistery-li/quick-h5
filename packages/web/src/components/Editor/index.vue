@@ -31,17 +31,15 @@
     editorRect = editorRef.value?.getBoundingClientRect()
   })
 
-  const commonStore = useCommonStore()
-
   const onDrop = (event: DragEvent) => {
     event.preventDefault()
     event.stopPropagation()
-    const index = event.dataTransfer!.getData('index')
+    const element = JSON.parse(event.dataTransfer!.getData('element'))
     const start: { offsetX: number; offsetY: number } = JSON.parse(
       event.dataTransfer!.getData('start')
     )
     // 获取拖拽进来的组件数据
-    const component: IComponent = cloneDeep(COMPONENTS[parseInt(index)])
+    const component: IComponent = cloneDeep(element)
     component.uuid = uuidv4()
     const { clientX, clientY } = event
     const { x, y } = editorRect as DOMRect
@@ -137,9 +135,8 @@
   <div
     id="editor"
     ref="editorRef"
-    :style="getComponentStyle(store.canvas.styles)"
+    :style="{ ...getComponentStyle(store.canvas.styles), ...store.page.style }"
     class="bg-white m-auto relative"
-    :class="[commonStore.isEdit ? 'edit-grid-bg' : '']"
     @drop="onDrop"
     @dragover="onDragOVer"
   >
@@ -168,7 +165,7 @@
 </template>
 
 <style lang="scss" scoped>
-  .edit-grid-bg {
+  #editor {
     background-size: 15.625px 15.625px;
     background-repeat: repeat;
     background-image: linear-gradient(

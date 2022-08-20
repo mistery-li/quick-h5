@@ -12,8 +12,6 @@
     isInput.value = true
   }
 
-  const data = ref(props.element.propValue)
-
   const onCancelInput = () => {
     isInput.value = false
   }
@@ -25,7 +23,7 @@
   </div>
   <input
     v-else
-    v-model="data"
+    v-model="props.element.propValue"
     :placeholder="props.element.propValue"
     @blur="onCancelInput"
   />
