@@ -1,5 +1,4 @@
 {
-  "extends": "../../..eslintrc",
   "env": {
     "browser": true,
     "es2021": true,
@@ -7,6 +6,7 @@
     "vue/setup-compiler-macros": true
   },
   "extends": [
+    "../../.eslintrc",
     "plugin:vue/vue3-recommended",
     "eslint:recommended",
     "@vue/typescript/recommended",

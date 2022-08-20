@@ -13,7 +13,6 @@
   import Picture from '../Widget/Picture.vue'
 
   import { getStyle } from '../../utils/utils'
-  import { useComponentStore } from '../../store/component'
   import { useCommonStore } from '../../store/common'
   import { useStore } from '../../store'
   import { COMPONENTS } from '../../constans'
@@ -22,8 +21,6 @@
     direction: direKeys
     cursor: string
   }
-
-  const componentStore = useComponentStore()
 
   const store = useStore()
 
@@ -70,8 +67,6 @@
       })
     }
     store.addComp(component)
-    // commonStore.addHistory(component, 'add')
-    // componentStore.components.push(component)
   }
 
   // const curComponent = ref<IComponent | null>(null)
@@ -94,12 +89,6 @@
   ) => {
     const styles = getStyle(style, ['top', 'left', 'transform'])
     return styles
-  }
-
-  const onMouseDown = (event: MouseEvent) => {
-    if (event.button !== 2) {
-      componentStore.curComponent = null
-    }
   }
 
   const points = computed<Point[]>(() => {
@@ -153,7 +142,6 @@
     :class="[commonStore.isEdit ? 'edit-grid-bg' : '']"
     @drop="onDrop"
     @dragover="onDragOVer"
-    @mousedown="onMouseDown"
   >
     <!-- <MarkLine :threshold="5"></MarkLine> -->
     <ShapePoint

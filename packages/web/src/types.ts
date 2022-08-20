@@ -19,21 +19,9 @@ export interface IComponent {
 }
 
 export type Events = {
-  data: {
-    type: string
-    jumpUrl: string
-    modal: {
-      title: string
-      width: number
-      height: number
-      confirmText: string
-      cancelText: string
-      confirmColor: string
-      confirmUrl: string
-    }
-  }
+  type: eventType
+  params: eventParam
   open: boolean
-  uuid: string
 }
 
 export type customStyle = Partial<
@@ -49,3 +37,22 @@ export type Entries<T> = {
 }[keyof T][]
 
 export type direKeys = 'lt' | 't' | 'rt' | 'r' | 'rb' | 'b' | 'lb' | 'l'
+
+export type eventType = 'jump' | 'modal'
+
+export type eventParam = {
+  jumpUrl?: string
+  modal?: {
+    title: ''
+    width: number
+    height: number
+    confirmText: string
+    cancelText: string
+    confirmColor: string
+    confirmUrl: string
+  }
+}
+export type componentEvent = {
+  type: eventType
+  params: eventParam
+}

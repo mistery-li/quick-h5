@@ -17,10 +17,6 @@
   const onCancelInput = () => {
     isInput.value = false
   }
-
-  const handleChange = (event: Event) => {
-    console.log(event, 'event')
-  }
 </script>
 
 <template>
@@ -32,7 +28,6 @@
     v-model="data"
     :placeholder="props.element.propValue"
     @blur="onCancelInput"
-    @change="handleChange"
   />
 </template>
 

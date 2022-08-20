@@ -11,8 +11,8 @@
     NColorPicker,
     useMessage,
   } from 'naive-ui'
-  import { v4 as uuidv4 } from 'uuid'
   import { useStore } from '../../store'
+  import { componentEvent } from '../../types'
 
   const props = defineProps<{
     modalValue: boolean
@@ -39,40 +39,38 @@
     }
   }
 
-  let form = reactive({
+  let form = reactive<componentEvent>({
     type: 'jump',
-    jumpUrl: '',
-    modal: {
-      title: '',
-      width: 300,
-      height: 300,
-      confirmText: '确定',
-      cancelText: '取消',
-      confirmColor: '',
-      confirmUrl: '',
+    params: {
+      jumpUrl: '',
     },
   })
 
   const typeOptions = ref([
     { label: '跳转链接', value: 'jump' },
-    {
-      label: '打开弹窗',
-      value: 'modal',
-    },
-    {
-      label: '自定义代码',
-      value: 'code',
-    },
+    // {
+    //   label: '打开弹窗',
+    //   value: 'modal',
+    // },
+    // {
+    //   label: '自定义代码',
+    //   value: 'code',
+    // },
   ])
 
   const message = useMessage()
 
   const handleAddEvents = () => {
-    store.curComp?.events.push({
-      uuid: uuidv4(),
+    const eventData = {
       open: false,
-      data: { ...form },
-    })
+      type: form.type,
+      params: { ...form.params },
+    }
+    const hasEvent = store.curComp?.events.find(
+      (event) => event.type === eventData.type
+    )
+    if (hasEvent) return message.warning('已添加相同动作，不必重复添加')
+    store.curComp?.events.push(eventData)
     message.success('添加成功')
     onClose()
   }
