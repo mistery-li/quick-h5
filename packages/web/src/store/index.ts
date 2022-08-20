@@ -20,6 +20,9 @@ export const useStore = defineStore('editor', {
       curComp: null as IComponent | null,
       history: [] as undoRedo[],
       current: -1,
+      page: {
+        style: {} as customStyle,
+      },
       canvas: {
         styles: {
           width: 375,
@@ -29,6 +32,9 @@ export const useStore = defineStore('editor', {
     }
   },
   actions: {
+    setPageStyle(_style: customStyle) {
+      this.page.style = { ...this.page.style, ..._style }
+    },
     addComp(comp: IComponent) {
       this.comps.push(comp)
       this.curComp = comp
@@ -38,6 +44,9 @@ export const useStore = defineStore('editor', {
       })
     },
     clearCanvas() {
+      this.page = {
+        style: {},
+      }
       this.comps = []
       this.curComp = null
       this.history = []
@@ -77,14 +86,12 @@ export const useStore = defineStore('editor', {
       const index = this.comps.findIndex(
         (comp) => comp.uuid === this.curComp?.uuid
       )
-      console.log(index, 'index')
       swap(this.comps, index, index + 1)
     },
     setCurCompToDown() {
       const index = this.comps.findIndex(
         (comp) => comp.uuid === this.curComp?.uuid
       )
-      console.log(index, 'index')
       swap(this.comps, index, index - 1)
     },
     setCurCompToBottom() {

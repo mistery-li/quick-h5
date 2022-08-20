@@ -13,8 +13,6 @@ export interface IComponent {
   label: string
   // 传递给组件数据
   propValue: any
-  // 图标
-  icon: string
   style: customStyle
 }
 
@@ -25,7 +23,16 @@ export type Events = {
 }
 
 export type customStyle = Partial<
-  Record<keyof CSSProperties, string | number | undefined>
+  Record<keyof CSSProperties, string | number | undefined> & {
+    textAlign:
+      | 'start'
+      | 'end'
+      | 'left'
+      | 'right'
+      | 'center'
+      | 'justify'
+      | 'match-parent'
+  }
 >
 
 export type PickByValue<T, V> = Pick<
