@@ -12,7 +12,6 @@
     cursor: string
     curComponent: IComponent | null
   }>()
-
   const store = useStore()
 
   const getPointStyles = computed(() => {
