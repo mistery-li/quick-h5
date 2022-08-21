@@ -13,14 +13,7 @@
   import Picture from '../Widget/Picture.vue'
 
   import { getStyle } from '../../utils/utils'
-  import { useCommonStore } from '../../store/common'
   import { useStore } from '../../store'
-  import { COMPONENTS } from '../../constans'
-
-  type Point = {
-    direction: direKeys
-    cursor: string
-  }
 
   const store = useStore()
 
@@ -88,47 +81,6 @@
     const styles = getStyle(style, ['top', 'left', 'transform'])
     return styles
   }
-
-  const points = computed<Point[]>(() => {
-    if (store.curComp) {
-      return [
-        {
-          direction: 'l',
-          cursor: 'w-resize',
-        },
-        {
-          direction: 't',
-          cursor: 'n-resize',
-        },
-        {
-          direction: 'r',
-          cursor: 'e-resize',
-        },
-        {
-          direction: 'b',
-          cursor: 's-resize',
-        },
-        {
-          direction: 'lt',
-          cursor: 'nw-resize',
-        },
-        {
-          direction: 'lb',
-          cursor: 'sw-resize',
-        },
-        {
-          direction: 'rt',
-          cursor: 'ne-resize',
-        },
-        {
-          direction: 'rb',
-          cursor: 'se-resize',
-        },
-      ]
-    } else {
-      return []
-    }
-  })
 </script>
 
 <template>
@@ -140,14 +92,6 @@
     @drop="onDrop"
     @dragover="onDragOVer"
   >
-    <!-- <MarkLine :threshold="5"></MarkLine> -->
-    <ShapePoint
-      v-for="point in points"
-      :key="point.direction"
-      :direction="point.direction"
-      :cursor="point.cursor"
-      :cur-component="store.curComp"
-    ></ShapePoint>
     <Shape
       v-for="(item, index) in store.comps"
       :key="item.uuid"

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-  import { CSSProperties } from 'vue'
+  import { computed, CSSProperties } from 'vue'
   import { cloneDeep } from 'lodash'
 
   import { getNeedsPxStyles } from '../../utils/styles'
@@ -15,57 +15,54 @@
 
   const store = useStore()
 
-  const getPointStyles = () => {
+  const getPointStyles = computed(() => {
     const defaultSize = 0
     const style: CSSProperties = {
       cursor: props.cursor,
     }
     if (!store.curComp) return style
-    const {
-      x,
-      y,
-      style: { width, height },
-    } = store.curComp!
+    const { width, height } = store.curComp?.style!
     const newWidth = Number(width)
     const newHeight = Number(height)
     const halfWidth = newWidth / 2
     const halfHeight = newHeight / 2
+    console.log('render pointer')
     switch (props.direction) {
       case 'l':
-        style.left = x - defaultSize
-        style.top = y + halfHeight - defaultSize
+        style.left = 0
+        style.top = halfHeight
         break
       case 't':
-        style.left = x + halfWidth - defaultSize
-        style.top = y - defaultSize
+        style.left = halfWidth - defaultSize
+        style.top = 0
         break
       case 'r':
-        style.left = x + newWidth - defaultSize
-        style.top = y + halfHeight - defaultSize
+        style.left = width
+        style.top = halfHeight
         break
       case 'b':
-        style.left = x + halfWidth - defaultSize
-        style.top = y + newHeight - defaultSize
+        style.left = halfWidth
+        style.top = newHeight
         break
       case 'lt':
-        style.left = x - defaultSize
-        style.top = y - defaultSize
+        style.left = 0
+        style.top = 0
         break
       case 'lb':
-        style.left = x - defaultSize
-        style.top = y + newHeight - defaultSize
+        style.left = 0
+        style.top = newHeight
         break
       case 'rt':
-        style.left = x + newWidth - defaultSize
-        style.top = y - defaultSize
+        style.left = newWidth
+        style.top = 0
         break
       case 'rb':
-        style.left = x + newWidth - defaultSize
-        style.top = y + newHeight - defaultSize
+        style.left = newWidth
+        style.top = newHeight
     }
 
     return getNeedsPxStyles(style)
-  }
+  })
 
   const onMouseDown = (point: direKeys, event: MouseEvent) => {
     event.preventDefault()
@@ -134,7 +131,7 @@
     ref="pointRef"
     class="shape-point"
     :data-dire="props.direction"
-    :style="getPointStyles()"
+    :style="{ ...getPointStyles, cursor: props.cursor }"
     @mousedown="onMouseDown(props.direction, $event)"
   ></div>
 </template>

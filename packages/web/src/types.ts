@@ -32,6 +32,8 @@ export type customStyle = Partial<
       | 'center'
       | 'justify'
       | 'match-parent'
+  } & {
+    rotate: number
   }
 >
 

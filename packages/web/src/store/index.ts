@@ -102,7 +102,7 @@ export const useStore = defineStore('editor', {
       this.comps.unshift(this.curComp!)
     },
     updateSelectedCompStyle(_style: customStyle) {
-      this.curComp!.style = { ..._style }
+      this.curComp!.style = { ...this.curComp!.style, ..._style }
       this.updateComps()
     },
     updateSelectedCompDataAnyStyles(data: any, _styles: customStyle) {
