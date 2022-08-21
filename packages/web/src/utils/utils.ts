@@ -4,7 +4,7 @@ import { customStyle } from '../types'
 export function getStyle(
   style: customStyle,
   filter: (keyof CSSProperties)[] = []
-): CSSProperties {
+): { [Key: string]: CSSProperties[keyof CSSProperties] } {
   const needUnit = [
     'fontSize',
     'width',

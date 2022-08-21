@@ -1,12 +1,21 @@
 <script setup lang="ts">
-  import { ref, reactive } from 'vue'
+  import { ref, reactive, computed, watch, onMounted } from 'vue'
   import type { CSSProperties } from 'vue'
   import { cloneDeep } from 'lodash'
-  import { NPopover, NList, NListItem, NButton } from 'naive-ui'
+  import { NPopover, NList, NListItem, NButton, NIcon } from 'naive-ui'
+  import { SyncCircleSharp } from '@vicons/ionicons5'
 
-  import { IComponent } from '../../types'
+  import { IComponent, direKeys } from '../../types'
   import MarkerLine from './MarkerLine.vue'
   import { useStore } from '../../store'
+  import { useRotate } from '../../composable/useRotate'
+  import { transformStyls, mod360 } from '../../utils/styles'
+  import ShapePoint from './ShapePoint.vue'
+
+  type Point = {
+    direction: direKeys
+    cursor: string
+  }
 
   const props = defineProps<{
     element: IComponent
@@ -26,14 +35,12 @@
       zIndex: props.zIndex,
     }
     ;(
-      ['width', 'height', 'top', 'left', 'transform'] as Array<
-        keyof typeof style
-      >
+      ['width', 'height', 'top', 'left', 'rotate'] as Array<keyof typeof style>
     ).forEach((attr) => {
-      if (attr !== 'transform') {
+      if (attr !== 'rotate') {
         result[attr] = style[attr] + 'px'
       } else {
-        result[attr] = style[attr]
+        result['transform'] = `rotate(${style[attr]}deg)`
       }
     })
     return result
@@ -48,7 +55,7 @@
     },
   })
 
-  const onMouseDown = (event: MouseEvent) => {
+  const onMouseDownOnShape = (event: MouseEvent) => {
     event.preventDefault()
     event.stopPropagation()
     if (props.element.uuid !== store.curComp?.uuid) {
@@ -155,6 +162,85 @@
     store.setCurCompToDown()
     onCloseRightMenu()
   }
+
+  const points = ['lt', 't', 'rt', 'r', 'rb', 'b', 'lb', 'l']
+  const initialAngle = {
+    // 每个点对应的初始角度
+    lt: 0,
+    t: 45,
+    rt: 90,
+    r: 135,
+    rb: 180,
+    b: 225,
+    lb: 270,
+    l: 315,
+  }
+  const angleToCursor = [
+    // 每个范围的角度对应的光标
+    { start: 338, end: 23, cursor: 'nw' },
+    { start: 23, end: 68, cursor: 'n' },
+    { start: 68, end: 113, cursor: 'ne' },
+    { start: 113, end: 158, cursor: 'e' },
+    { start: 158, end: 203, cursor: 'se' },
+    { start: 203, end: 248, cursor: 's' },
+    { start: 248, end: 293, cursor: 'sw' },
+    { start: 293, end: 338, cursor: 'w' },
+  ]
+  const cursors = reactive<any>({})
+  const rotateStyle = computed(() => {
+    if (store.curComp?.style) {
+      const { width, height } = store.curComp?.style
+      const _style = {
+        left: Number(width) / 2 - 15,
+        top: Number(height) + 10,
+      }
+      return transformStyls(_style)
+    }
+    return {}
+  })
+
+  const { rotate, onMouseDown, moveDone } = useRotate()
+
+  watch(
+    () => moveDone.value,
+    (val) => {
+      if (val) {
+        getCursor()
+      }
+    }
+  )
+
+  const getCursor = () => {
+    const _rotate = mod360(rotate.value)
+    let lastMatchIndex = -1
+
+    points.forEach((point) => {
+      const angle = mod360(initialAngle[point] + _rotate)
+      const len = angleToCursor.length
+      while (true) {
+        lastMatchIndex = (lastMatchIndex + 1) % len
+        const angleLimit = angleToCursor[lastMatchIndex]
+        if (angle < 23 || angle >= 338) {
+          cursors[point] = 'nw-resize'
+
+          return
+        }
+
+        if (angleLimit.start <= angle && angle < angleLimit.end) {
+          cursors[point] = angleLimit.cursor + '-resize'
+
+          return
+        }
+      }
+    })
+    console.log(cursors, 'cursor')
+  }
+
+  onMounted(() => {
+    if (store.curComp) {
+      getCursor()
+    }
+  })
 </script>
 
 <template>
@@ -195,9 +281,27 @@
     class="shape"
     :class="props.element.uuid === store.curComp?.uuid ? 'active' : ''"
     @contextmenu="onContextMenu(props.element, $event)"
-    @mousedown="onMouseDown"
+    @mousedown="onMouseDownOnShape"
   >
     <slot></slot>
+    <template v-if="store.curComp?.uuid === props.element.uuid">
+      <ShapePoint
+        v-for="point in points"
+        :key="point"
+        :direction="point"
+        :cursor="cursors[point]"
+        :cur-component="store.curComp"
+      ></ShapePoint>
+      <div
+        class="rotate-icon inline-block absolute cursor-pointer"
+        @mousedown="onMouseDown"
+        :style="rotateStyle"
+      >
+        <n-icon size="28">
+          <SyncCircleSharp />
+        </n-icon>
+      </div>
+    </template>
   </div>
   <MarkerLine
     :is-start="moveState.isStart"

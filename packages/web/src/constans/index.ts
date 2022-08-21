@@ -21,6 +21,7 @@ export const IMAGE_COMPONENTS: IComponent[] = [
       height: 200,
       borderRadius: 0,
       borderWidth: 1,
+      rotate: 0,
     },
   },
 ]
@@ -40,6 +41,7 @@ export const TEXT_COMPONENTS: IComponent[] = [
       height: TEXT_TITLE_STYLE.fontSize,
       fontWeight: 500,
       lineHeight: 1,
+      rotate: 0,
     },
   },
   {
@@ -56,6 +58,7 @@ export const TEXT_COMPONENTS: IComponent[] = [
       height: TEXT_TITLE_STYLE.fontSize,
       fontWeight: 500,
       lineHeight: 1,
+      rotate: 0,
     },
   },
   {
@@ -72,6 +75,7 @@ export const TEXT_COMPONENTS: IComponent[] = [
       height: 28,
       fontWeight: 500,
       lineHeight: 1,
+      rotate: 0,
     },
   },
 ]
@@ -91,6 +95,7 @@ export const COMPONENTS: IComponent[] = [
       borderWidth: 1,
       borderColor: '',
       borderRadius: 0,
+      rotate: 0,
     },
   },
 ]
