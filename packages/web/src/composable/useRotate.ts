@@ -34,6 +34,7 @@ export const useRotate = () => {
       const curY = centerPos.y - moveY
       const rotateAfter = Math.atan2(curY, curX) / (Math.PI / 180)
       rotate.value = startRotate! + rotateBefore - rotateAfter
+      if (rotate.value % 5 === 0) return
       store.curComp!.style.rotate = mod360(rotate.value)
     }
 
