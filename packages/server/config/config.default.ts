@@ -16,7 +16,9 @@ export default (appInfo: EggAppInfo) => {
   // add your egg config in here
   config.middleware = [];
 
-  config.mode = 'file'
+  config.multipart = {
+    mode: 'file'
+  }
 
   // add your special config in here
   const bizConfig = {
