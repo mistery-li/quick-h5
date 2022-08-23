@@ -4,8 +4,8 @@
   "version": "1.0.0",
   "scripts": {
     "dev:web": "pnpm -C ./packages/web dev",
-    "dev:server": "pnpm -C ./packages/server start:dev",
-    "dev": "pnpm -C ./packages/web dev & pnpm -C ./packages/server start:dev",
+    "dev:server": "pnpm -C ./packages/server dev",
+    "dev": "pnpm -C ./packages/web dev & pnpm -C ./packages/server dev",
     "build:web": "pnpm -C ./packages/web build",
     "preview:web": "pnpm -C ./packages/web preview",
     "clean": "rm -rf node_modules **/*/node_modules"
