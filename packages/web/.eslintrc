@@ -6,9 +6,8 @@
     "vue/setup-compiler-macros": true
   },
   "extends": [
-    "../../.eslintrc",
+    "../../.eslintrc.js",
     "plugin:vue/vue3-recommended",
-    "eslint:recommended",
     "@vue/typescript/recommended",
     "@vue/prettier"
   ],
