@@ -3,10 +3,12 @@
   "private": true,
   "version": "1.0.0",
   "scripts": {
+    "dev:react": "pnpm -C ./packages/react dev",
     "dev:web": "pnpm -C ./packages/web dev",
     "dev:server": "pnpm -C ./packages/server start:dev",
     "dev": "pnpm -C ./packages/web dev & pnpm -C ./packages/server start:dev",
     "build:web": "pnpm -C ./packages/web build",
+    "build:react": "pnpm -C ./packages/react build",
     "preview:web": "pnpm -C ./packages/web preview",
     "clean": "rm -rf node_modules **/*/node_modules"
   },
@@ -21,6 +23,7 @@
   },
   "dependencies": {
     "web": "workspace:*",
-    "server": "workspace:*"
+    "server": "workspace:*",
+    "react": "workspace:*"
   }
 }
