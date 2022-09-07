@@ -11,12 +11,10 @@ import WdigetList from '../WidgetList'
 import QuickDrawer from '../Drawer'
 
 import { createApi } from 'unsplash-js'
-import { Random } from 'unsplash-js/dist/methods/photos/types'
 import { ComponentItem } from '../../types'
 export const Container = () => {
   const List = widgets
 
-  const [visible, setVisible] = useState(false)
   const [current, setCurrent] = useState('')
 
   const [currentWdigetList, setCurrentWdigetList] = useState<ComponentItem[]>(
@@ -26,10 +24,6 @@ export const Container = () => {
   const unSplashApi = createApi({
     accessKey: 'oBe1wCYQT-clVYqehPyyRthRokOebCryZWWQi1IsTEE',
   })
-
-  const onToggle = () => {
-    setVisible(!visible)
-  }
 
   const getImages = async () => {
     if (current === 'image') {
@@ -53,20 +47,11 @@ export const Container = () => {
 
   const openWidgetList = (comp: string) => {
     setCurrent(comp)
-    setVisible(true)
-    setToggle(true)
-    console.log(comp, 'comp 000')
     if (comp !== 'image') {
       const widgetList = List.find((item) => item.component === comp)
       setCurrentWdigetList(widgetList?.children as any)
     }
   }
-
-  const [toggle, setToggle] = useState(false)
-  const onCloseDrawer = () => {
-    setToggle(!toggle)
-  }
-
   return (
     <div className="flex w-full">
       <ul className="pl-0 widget-wrapper">
@@ -90,12 +75,7 @@ export const Container = () => {
           )
         })}
       </ul>
-      <QuickDrawer
-        placement="left"
-        visible={visible}
-        onClose={onToggle}
-        onOpen={onToggle}
-      >
+      <QuickDrawer placement="left">
         <WdigetList current={current} data={currentWdigetList}></WdigetList>
       </QuickDrawer>
       <div className="flex-grow bg-gray-200">

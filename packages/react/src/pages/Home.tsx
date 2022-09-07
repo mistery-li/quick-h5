@@ -44,12 +44,7 @@ export const Home = () => {
           <Editor />
         </DndProvider>
         {/* <div className="flex-none w-3/12 flex"> */}
-        <Drawer
-          visible={visible}
-          placement="right"
-          onOpen={onToggle}
-          onClose={onToggle}
-        >
+        <Drawer placement="right" onOpen={onToggle} onClose={onToggle}>
           {/* <Toolbar></Toolbar> */}
           <Panel></Panel>
         </Drawer>

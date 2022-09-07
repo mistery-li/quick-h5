@@ -1,29 +1,24 @@
-import { CSSProperties, ReactNode } from 'react'
+import { CSSProperties, ReactNode, useState } from 'react'
 
 import styles from './index.module.less'
 import DrawerIcon from './icon'
 
 interface DrawerProps {
   children?: ReactNode
-  visible?: boolean
   placement?: string
   onClose?: () => void
-  onOpen: () => void
+  onOpen?: () => void
 }
 
-const QuickDrawer = ({
-  children,
-  visible,
-  placement,
-  onClose,
-  onOpen,
-}: DrawerProps) => {
+const QuickDrawer = ({ children, placement, onClose, onOpen }: DrawerProps) => {
+  const [visible, setVisible] = useState(false)
   const onToggle = () => {
     if (visible) {
       onClose?.()
     } else {
       onOpen?.()
     }
+    setVisible(!visible)
   }
   return (
     <div
