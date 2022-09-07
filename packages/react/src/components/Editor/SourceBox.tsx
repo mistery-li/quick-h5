@@ -15,6 +15,7 @@ export interface SourceBoxProps {
 }
 
 export const SourceBox = ({ color, children, component, current }) => {
+  console.log([component, current], 'srouce')
   const [{ isDragging }, drag] = useDrag(
     () => ({
       type: color,
@@ -23,7 +24,7 @@ export const SourceBox = ({ color, children, component, current }) => {
         isDragging: monitor.isDragging(),
       }),
     }),
-    [color]
+    [color, component]
   )
 
   const backgroundColor = useMemo(() => {

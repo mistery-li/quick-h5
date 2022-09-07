@@ -17,8 +17,6 @@ import { Resizable } from 'react-resizable'
 import { Dropdown, Menu, message } from 'antd'
 import type { MenuProps } from 'antd'
 
-import { useMarkerLine } from '../../hook/useMarkerLine'
-
 import ShapePoint from '../ShapePoint'
 
 import styles from './index.module.less'
@@ -42,13 +40,14 @@ import { useState } from 'react'
 
 const TargetBox = () => {
   const dispatch = useDispatch()
-  const comps = useSelector((state) => getComps(state))
-  const curComp = useSelector((state) => getCurComp(state))
+  const comps = useSelector((state: RootState) => getComps(state))
+  const curComp = useSelector((state: RootState) => getCurComp(state))
   const [{ isOver }, drop] = useDrop(() => ({
     accept: [Colors.YELLOW, Colors.BLUE],
     drop(_item: ComponentItem, monitor) {
       const result = monitor.getSourceClientOffset()!
       const component = cloneDeep(monitor.getItem())
+      console.log(_item, 'component')
       const editorRect = document
         .getElementById('editor')
         ?.getBoundingClientRect()!

@@ -46,6 +46,12 @@ export const componentsSlice = createSlice({
         state.curComp.lock = !state.curComp.lock
       }
     },
+    setCompEvent(state, action) {
+      state.curComp!.eventData.link = action.payload
+    },
+    toggleEvent(state, action) {
+      state.curComp!.openEvent = action.payload
+    },
     deleteCurComp(state) {
       const idx = state.comps.findIndex(
         (comp) => comp.uuid === state.curComp?.uuid
@@ -169,9 +175,6 @@ export const getHistory = (state: RootState) => state.editor.history
 
 export const getCurrent = (state: RootState) => state.editor.current
 
-export const getMoveDirection = (state: RootState) =>
-  state.componentsData.moveDirection
-
 export const {
   addComp,
   setCurComp,
@@ -183,6 +186,8 @@ export const {
   undo,
   redo,
   deleteCurComp,
+  setCompEvent,
+  toggleEvent,
   setLockComp,
   compToTop,
   compToBottom,

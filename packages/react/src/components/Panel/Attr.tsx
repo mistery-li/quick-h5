@@ -4,7 +4,11 @@ import { UploadOutlined } from '@ant-design/icons'
 import { Space, UploadProps } from 'antd'
 import { Button, message, Upload, Col, InputNumber, Row, Slider } from 'antd'
 
-import { Form, Select, Result, Input } from 'antd'
+import { Form, Select, Result, Input, Checkbox } from 'antd'
+
+import type { CheckboxChangeEvent } from 'antd/es/checkbox'
+
+import { setCompEvent, toggleEvent } from '../../store/components'
 
 const { Option } = Select
 
@@ -85,7 +89,7 @@ const Attr = () => {
         [styleKey]: parseFloat(event.target.value),
       })
     )
-    dispatch(updateComps(null))
+    dispatch(updateComps())
   }
 
   const handleFieldsChange = (changedFields, allFields) => {
@@ -95,22 +99,49 @@ const Attr = () => {
         [changedFields[0]['name'][0]]: parseFloat(changedFields[0].value),
       })
     )
-    dispatch(updateComps(null))
+    dispatch(updateComps())
   }
 
   const renderImageForm = () => {
     const onBorderRadiusChange = (newValue: number) => {
       dispatch(setCurCompStyle({ borderRadius: newValue }))
-      dispatch(updateComps(null))
+      dispatch(updateComps())
+    }
+
+    const onSwitchLinkRouter = () => {
+      dispatch(toggleEvent(!curComp?.openEvent))
+      dispatch(updateComps())
+    }
+
+    const handleLinkChange = (e: any) => {
+      console.log(e, 'eeee')
+      dispatch(setCompEvent(e.target.value))
+      dispatch(updateComps())
     }
     return (
       <>
         {curComp && (
-          <div className="flex flex-col">
-            <div>
-              <Button>替换图片</Button>
-            </div>
-            <Row style={{ alignItems: 'center' }}>
+          <div className="flex flex-col gap-4">
+            <Button>替换图片</Button>
+            <Checkbox
+              checked={curComp!.openEvent}
+              onChange={onSwitchLinkRouter}
+            >
+              启用跳转链接
+            </Checkbox>
+            {curComp!.openEvent && (
+              <Space>
+                <Select defaultValue={curComp!.eventData.type}>
+                  <Option value="outerChain">网页链接</Option>
+                  <Option value="pageChain">页面跳转</Option>
+                </Select>
+                <Input
+                  value={curComp!.eventData.link}
+                  onChange={handleLinkChange}
+                />
+              </Space>
+            )}
+            <Row style={{ alignItems: 'center', marginBottom: '20px' }}>
               <Col span={3}>
                 <div>{styleMap['borderRadius']}</div>
               </Col>
@@ -126,7 +157,7 @@ const Attr = () => {
                 <InputNumber
                   style={{ width: '60px', margin: '0 8px' }}
                   size="small"
-                  min={1}
+                  min={0}
                   max={100}
                   value={Number(curComp.style.borderRadius)}
                   onChange={onBorderRadiusChange}
