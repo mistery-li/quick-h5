@@ -66,6 +66,11 @@ export const widgets = [
       {
         label: '图片',
         component: 'image',
+        openEvent: false,
+        eventData: {
+          type: 'outerChain',
+          link: '',
+        },
         propValue:
           'https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png',
         pos: {
@@ -80,30 +85,30 @@ export const widgets = [
       },
     ],
   },
-  {
-    label: '背景',
-    component: 'background',
-    icon: 'BoldOutlined',
-    children: [],
-  },
-  {
-    label: '互动',
-    component: 'interaction',
-    icon: 'InteractionOutlined',
-    children: [],
-  },
-  {
-    label: '音乐',
-    component: 'music',
-    icon: 'BellOutlined',
-    children: [],
-  },
-  {
-    label: '视频',
-    component: 'video',
-    icon: 'VideoCameraOutlined',
-    children: [],
-  },
+  // {
+  //   label: '背景',
+  //   component: 'background',
+  //   icon: 'BoldOutlined',
+  //   children: [],
+  // },
+  // {
+  //   label: '互动',
+  //   component: 'interaction',
+  //   icon: 'InteractionOutlined',
+  //   children: [],
+  // },
+  // {
+  //   label: '音乐',
+  //   component: 'music',
+  //   icon: 'BellOutlined',
+  //   children: [],
+  // },
+  // {
+  //   label: '视频',
+  //   component: 'video',
+  //   icon: 'VideoCameraOutlined',
+  //   children: [],
+  // },
 ]
 
 // export const componentList = [

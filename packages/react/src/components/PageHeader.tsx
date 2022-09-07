@@ -326,6 +326,8 @@ const PageHeader = () => {
                         {item.component === 'text' && <Text isEdit />}
                         {item.component === 'image' && (
                           <Picture
+                            openEvent={item.openEvent}
+                            eventData={item.eventData}
                             propValue={item.propValue}
                             styles={item.style}
                           />

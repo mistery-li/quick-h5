@@ -1,8 +1,8 @@
-import { useState, useEffect, memo } from 'react'
+import { useState, useEffect, memo, CSSProperties } from 'react'
 import { useSelector } from 'react-redux'
 import { getComps, getCurComp } from '../../../store/components'
 import { RootState } from '../../../store'
-import { ComponentItem } from '../../types'
+import { ComponentItem } from '../../../types'
 
 export const checkArrayWithPush = (target, key, value) => {
   if (Array.isArray(target[key])) {
@@ -36,7 +36,7 @@ const MarkLine = ({
   direction: { x: number; y: number } | null
 }) => {
   const commonStyle = {
-    position: 'absolute',
+    position: 'absolute' as any,
     backgroundColor: '#ac380a',
   }
 
@@ -49,9 +49,9 @@ const MarkLine = ({
   const compares = components.filter((comp) => comp.uuid !== curComp?.uuid)
 
   const [state, steState] = useState({
-    xLines: [],
-    yLines: [],
-    indices: [],
+    xLines: [] as any,
+    yLines: [] as any,
+    indices: [] as any,
   })
 
   const calcLineValues = (pos, target, compare, linekey) => {
@@ -101,8 +101,8 @@ const MarkLine = ({
     switch (direction) {
       case 'lr': {
         const sides: { dist: number; value: number }[] = []
-        sides.push({ dist: x - r, value: r }) // right side
-        sides.push({ dist: x + W - xCompare, value: l }) // left side
+        sides.push({ dist: x - r!, value: r! }) // right side
+        sides.push({ dist: x + W - xCompare!, value: l! }) // left side
         sides.forEach((side) => {
           if (Math.abs(side.dist) < Math.abs(result.dist)) {
             result.dist = side.dist
@@ -112,25 +112,25 @@ const MarkLine = ({
         break
       }
       case 'll':
-        result.dist = x - l
-        result.value = l
+        result.dist = x - l!
+        result.value = l!
         break
       case 'rr':
-        result.dist = x + W - r
-        result.value = r
+        result.dist = x + W - r!
+        result.value = r!
         break
       case 'tt':
-        result.dist = y - t
-        result.value = t
+        result.dist = y - t!
+        result.value = t!
         break
       case 'bb':
-        result.dist = y + H - b
-        result.value = b
+        result.dist = y + H - b!
+        result.value = b!
         break
       case 'tb': {
         const sides: { dist: number; value: number }[] = []
-        sides.push({ dist: y + H - t, value: t }) // top side
-        sides.push({ dist: y - b, value: b }) // bottom side
+        sides.push({ dist: y + H - t!, value: t! }) // top side
+        sides.push({ dist: y - b!, value: b! }) // bottom side
         sides.forEach((side) => {
           if (Math.abs(side.dist) < Math.abs(result.dist)) {
             result.dist = side.dist
@@ -140,20 +140,17 @@ const MarkLine = ({
         break
       }
       case 'mv': // middle vertical
-        result.dist = y + H / 2 - tb
-        result.value = tb
+        result.dist = y + (H as number) / 2 - tb!
+        result.value = tb!
         break
       case 'mh': // middle horizontal
-        result.dist = x + W / 2 - lr
-        result.value = lr
+        result.dist = x + (W as number) / 2 - lr!
+        result.value = lr!
         break
     }
 
     if (Math.abs(result.dist) < 6) {
       result.near = true
-    }
-    if (result.near) {
-      result.direction = direction
     }
     return result
   }
@@ -193,14 +190,14 @@ const MarkLine = ({
     const resultArray = Object.entries(results)
     if (resultArray.length) {
       const [minDistance, activeCompares] = resultArray.sort(
-        ([dist1], [dist2]) => Math.abs(dist1) - Math.abs(dist2)
+        ([dist1], [dist2]) => Math.abs(dist1 as any) - Math.abs(dist2 as any)
       )[0]
       const dist = parseInt(minDistance)
       return {
         v: pos[lineKey] - dist,
         dist: dist,
         lines: activeCompares,
-        indices: activeCompares.map(({ i }) => i),
+        indices: (activeCompares as any).map(({ i }) => i),
       }
     }
 
@@ -228,15 +225,15 @@ const MarkLine = ({
 
     // 匹配line
     const indices = [...new Set([...indices_x, ...indices_y])]
-    if (xLines.length && yLines.length) {
-      xLines.map((line) => {
+    if ((xLines as any).length && (yLines as any).length) {
+      ;(xLines as any).map((line) => {
         const compare = compares.find(({ uuid }) => uuid === line.i)
         const { length, origin } = calcLineValues(pos, target, compare, 'x')
         line.length = length
         line.origin = origin
         return line
       })
-      yLines.map((line) => {
+      ;(yLines as any).map((line) => {
         const compare = compares.find(({ uuid }) => uuid === line.i)
         const { length, origin } = calcLineValues(pos, target, compare, 'y')
 

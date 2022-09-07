@@ -21,7 +21,7 @@ export const Home = () => {
   return (
     <>
       <Layout>
-        <Alert
+        {/* <Alert
           message={
             <div>
               <span>
@@ -34,7 +34,7 @@ export const Home = () => {
           }
           type="warning"
           closable
-        />
+        /> */}
         <Header style={{ background: '#fff' }}>
           <PageHeader />
         </Header>

@@ -5,6 +5,8 @@ export interface ComponentItem<> {
   uuid?: string
   label: string
   component: string
+  openEvent?: boolean
+  eventData?: any
   propValue: any
   pos: Pos
   style: CSSProperties

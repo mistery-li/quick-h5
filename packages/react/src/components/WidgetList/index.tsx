@@ -1,6 +1,6 @@
 import { Image } from 'antd'
 import type { FC, ReactNode } from 'react'
-import { memo, useCallback, useMemo, useState } from 'react'
+import { memo, useCallback, useState } from 'react'
 import type { DragSourceMonitor } from 'react-dnd'
 import { useDrag } from 'react-dnd'
 import { ComponentItem } from '../../types'
@@ -10,13 +10,7 @@ import { SourceBox } from '../Editor/SourceBox'
 import { Title, SubTitle, Text } from '../Widget/Text'
 import styles from './styles.module.less'
 
-const WdigetList = ({
-  data,
-  current,
-}: {
-  data: ComponentItem[]
-  current: string
-}) => {
+const WidgetList = ({ data, current }) => {
   return (
     <>
       {current !== 'image' &&
@@ -70,4 +64,4 @@ const WdigetList = ({
   )
 }
 
-export default WdigetList
+export default memo(WidgetList)
