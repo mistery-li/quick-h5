@@ -10,9 +10,9 @@
     useMessage,
   } from 'naive-ui'
 
-  import VButton from './Widget/VButton.vue'
-  import VText from './Widget/VText.vue'
-  import Picture from './Widget/Picture.vue'
+  import VButton from './elements/VButton.vue'
+  import VText from './elements/VText.vue'
+  import Picture from './elements/Picture.vue'
 
   import { getStyle } from '../utils/utils'
   import { customStyle, IComponent } from '../types'

@@ -21,43 +21,41 @@
 
 <template>
   <n-message-provider>
-    <n-space vertical size="large">
-      <n-layout-header style="height: 60px" bordered>
-        <Header></Header>
-      </n-layout-header>
-      <n-layout has-sider>
+    <n-layout-header style="height: 60px" bordered>
+      <Header></Header>
+    </n-layout-header>
+    <n-layout has-sider>
+      <n-layout-sider
+        :onCollapse="handleCollapse"
+        collapse-mode="width"
+        :collapsed-width="80"
+        :default-collapsed="false"
+        :width="350"
+        :collapsed="collapsed"
+        :native-scrollbar="true"
+        show-trigger="arrow-circle"
+        bordered
+      >
+        <WidgetList v-model="collapsed" />
+      </n-layout-sider>
+      <n-layout has-sider sider-placement="right" style="height: 95vh">
+        <n-layout-content class="bg-gray-200">
+          <Editor />
+        </n-layout-content>
         <n-layout-sider
-          :onCollapse="handleCollapse"
           collapse-mode="width"
-          :collapsed-width="80"
+          :collapsed-width="0"
           :default-collapsed="false"
           :width="350"
-          :collapsed="collapsed"
           :native-scrollbar="true"
           show-trigger="arrow-circle"
+          content-style="padding-left: 24px;"
           bordered
         >
-          <WidgetList v-model="collapsed" />
+          <StylesPanel />
         </n-layout-sider>
-        <n-layout has-sider sider-placement="right" style="height: 95vh">
-          <n-layout-content content-style="padding: 24px;" class="bg-gray-200">
-            <Editor />
-          </n-layout-content>
-          <n-layout-sider
-            collapse-mode="width"
-            :collapsed-width="0"
-            :default-collapsed="false"
-            :width="350"
-            :native-scrollbar="true"
-            show-trigger="arrow-circle"
-            content-style="padding-left: 24px;"
-            bordered
-          >
-            <StylesPanel />
-          </n-layout-sider>
-        </n-layout>
       </n-layout>
-    </n-space>
+    </n-layout>
   </n-message-provider>
 </template>
 

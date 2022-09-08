@@ -1,5 +1,5 @@
 <script setup lang="ts">
-  import { ref, onMounted, computed } from 'vue'
+  import { ref, onMounted, watchEffect } from 'vue'
   import type { Component } from 'vue'
   import { v4 as uuidv4 } from 'uuid'
   import { cloneDeep } from 'lodash'
@@ -8,14 +8,18 @@
 
   import Shape from './Shape.vue'
   import ShapePoint from './ShapePoint.vue'
-  import VButton from '../Widget/VButton.vue'
-  import VText from '../Widget/VText.vue'
-  import Picture from '../Widget/Picture.vue'
+  import VButton from '../elements/VButton.vue'
+  import VText from '../elements/VText.vue'
+  import Picture from '../elements/Picture.vue'
 
   import { getStyle } from '../../utils/utils'
-  import { useStore } from '../../store'
 
-  const store = useStore()
+  import { pageElement } from '../../types/elements'
+
+  import useCreateElement from '../../hooks/useCreateElement'
+  import { storeToRefs } from 'pinia'
+  import { usePagesStore } from '../../store/pages'
+  import { useMainStore } from '../../store/main'
 
   const editorRef = ref<HTMLElement | null>(null)
 
@@ -23,6 +27,12 @@
   onMounted(() => {
     editorRect = editorRef.value?.getBoundingClientRect()
   })
+
+  const { currentPage } = storeToRefs(usePagesStore())
+  const { createElement } = useCreateElement()
+  const mainStore = useMainStore()
+
+  const { handleElementId, activeElementIds } = storeToRefs(mainStore)
 
   const onDrop = (event: DragEvent) => {
     event.preventDefault()
@@ -32,32 +42,16 @@
       event.dataTransfer!.getData('start')
     )
     // 获取拖拽进来的组件数据
-    const component: IComponent = cloneDeep(element)
-    component.uuid = uuidv4()
+    const elementData: pageElement = cloneDeep(element)
+    elementData.id = uuidv4()
     const { clientX, clientY } = event
     const { x, y } = editorRect as DOMRect
     // 减去拖拽开始时候的鼠标坐标，避免位置偏移
-    const transX = clientX - x - start.offsetX
-    const transY = clientY - y - start.offsetY
-    const editorStyles = store.canvas.styles
-    // 放下组件时候如果位置+长度超出画布则至于左侧尽头
-    const calcTransX =
-      transX < 0
-        ? 0
-        : transX + (component.style.width as number) > editorStyles.width
-        ? editorStyles.width - (component.style.width as number)
-        : transX
-
-    component.x = calcTransX
-    component.y = transY
-    component.style.left = calcTransX
-    component.style.top = transY
-    if (clientY + (component.style.height as number) > 700) {
-      store.updateCanvasStyles({
-        height: editorStyles.height + (component.style.height as number),
-      })
-    }
-    store.addComp(component)
+    const left = clientX - x - start.offsetX
+    const top = clientY - y - start.offsetY
+    elementData.style.left = left
+    elementData.style.top = top
+    createElement(elementData)
   }
 
   // const curComponent = ref<IComponent | null>(null)
@@ -67,11 +61,26 @@
     event.dataTransfer!.dropEffect = 'copy'
   }
 
+  const handleClickBlankArea = (e: Event) => {
+    console.log(e, 'e')
+    e.stopPropagation()
+    mainStore.setActiveElementIds([])
+    mainStore.setHandleElementId('')
+  }
+
   const componentMap: Record<string, Component> = {
     VButton,
     VText,
     Picture,
   }
+
+  const elementList = ref([])
+  const setLocalElements = () => {
+    elementList.value = currentPage.value
+      ? cloneDeep(currentPage.value.elements)
+      : []
+  }
+  watchEffect(setLocalElements)
 
   const getComponentStyle = <
     T extends Partial<{ [key in keyof CSSStyleDeclaration]: string | number }>
@@ -85,39 +94,50 @@
 
 <template>
   <div
-    id="editor"
-    ref="editorRef"
-    :style="{ ...getComponentStyle(store.canvas.styles), ...store.page.style }"
-    class="bg-white m-auto relative"
+    class="editor-wrapper"
+    @click.self="handleClickBlankArea"
     @drop="onDrop"
     @dragover="onDragOVer"
   >
-    <Shape
-      v-for="(item, index) in store.comps"
-      :key="item.uuid"
-      :z-index="index"
-      :element="item"
+    <div
+      id="editor"
+      @click.self="handleClickBlankArea"
+      ref="editorRef"
+      :style="{
+        width: '375px',
+        height: '800px',
+      }"
+      class="bg-white m-auto relative"
     >
-      <component
-        :is="componentMap[item.component]"
-        class="component"
-        :element="item"
-        :style="getComponentStyle(item.style)"
-      ></component>
-    </Shape>
+      <Shape
+        v-for="(element, index) in elementList"
+        :key="element.id"
+        :z-index="index"
+        :select="activeElementIds.includes(element.id)"
+        :element="element"
+        :active="handleElementId === element.id"
+      >
+        <component
+          :is="componentMap[element.component]"
+          class="component"
+          :element="element"
+          :style="getComponentStyle(element.style)"
+        ></component>
+      </Shape>
+    </div>
   </div>
 </template>
 
 <style lang="scss" scoped>
+  .editor-wrapper {
+    height: calc(100vh - 60px);
+    background: #d9d9d9;
+  }
   #editor {
-    background-size: 15.625px 15.625px;
-    background-repeat: repeat;
-    background-image: linear-gradient(
-        90deg,
-        rgb(240, 240, 240) 5%,
-        transparent 0px
-      ),
-      linear-gradient(rgb(240, 240, 240) 5%, transparent 0px);
+    position: absolute;
+    top: 100px;
+    left: 50%;
+    transform: translate(-50%, 0);
   }
   .component {
     outline: none;

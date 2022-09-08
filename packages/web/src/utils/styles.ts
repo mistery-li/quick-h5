@@ -1,6 +1,37 @@
 import { CSSProperties } from 'vue'
 import { customStyle } from '../types'
 
+type needUnitKeys =
+  | 'width'
+  | 'height'
+  | 'left'
+  | 'top'
+  | 'borderWidth'
+  | 'rotate'
+
+const needUnitStyleKeys = [
+  'width',
+  'height',
+  'left',
+  'top',
+  'borderWidth',
+  'rotate',
+] as const
+
+export const buildStyles = (style: Partial<CSSProperties>) => {
+  let newStyle: CSSProperties = {}
+  if (!style)
+    return (Object.keys(style) as (keyof CSSProperties)[]).forEach((key) => {
+      if (needUnitStyleKeys.includes(key)) {
+        newStyle[key as needUnitKeys] =
+          style[key] + (key === 'rotate' ? 'deg' : 'px')
+      } else {
+        newStyle[key] = style[key]
+      }
+    })
+  return newStyle
+}
+
 export const getNeedsPxStyles = (style: CSSProperties): CSSProperties => {
   const result: any = {}
   const needPxCssStylesArr = ['width', 'height', 'top', 'left']

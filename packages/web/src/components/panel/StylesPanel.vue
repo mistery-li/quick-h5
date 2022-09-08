@@ -1,5 +1,5 @@
 <script setup lang="ts">
-  import { ref, watch } from 'vue'
+  import { ref, computed } from 'vue'
   import {
     NTag,
     NH2,
@@ -25,25 +25,35 @@
   import EventModal from './EventModal.vue'
   import { customStyle } from '../../types'
   import { EVENT_MAP } from '../../constans'
+  import { storeToRefs } from 'pinia'
+  import { usePagesStore } from '../../store/pages'
+  import { useMainStore } from '../../store/main'
 
-  const store = useStore()
+  const { currentPage } = storeToRefs(usePagesStore())
+
+  const mainStore = useMainStore()
+  const { handleElement } = storeToRefs(mainStore)
 
   const styleKeys = ref<(keyof customStyle)[]>([])
 
-  watch(
-    () => store.curComp,
-    (val) => {
-      if (!val) return
-      // @ts-ignore
-      styleKeys.value = Object.keys(val?.style).filter(
-        (key) => !['transform', 'width', 'height', 'left', 'top'].includes(key)
-      )
-      store.updateComps()
-    },
-    {
-      deep: true,
+  const elementTabs = computed(() => {
+    if (!handleElement.value) return []
+    console.log(handleElement.value, 'handle element')
+    if (handleElement.value.component === 'VText') {
+      return [
+        {
+          label: '文字',
+          name: 'text',
+        },
+        {
+          label: '动画',
+          name: 'animation',
+        },
+      ]
+    } else {
+      return []
     }
-  )
+  })
 
   const showEvents = ref(false)
   const addEvents = () => {
@@ -52,26 +62,26 @@
 </script>
 
 <template>
-  <div v-if="!store.curComp">
+  <div v-if="elementTabs.length === 0">
     <n-result
       status="404"
-      title="还没有数据呢"
-      description="拖拽部件生成你的营销H5页面吧"
+      title="暂无正在操作的元素"
+      description="请拖拽元素到画布中进行编辑"
       size="medium"
     >
     </n-result>
   </div>
   <div v-else>
     <n-tabs type="line" animated>
-      <n-tab-pane name="oasis" tab="属性">
+      <n-tab-pane :name="tab.name" :tab="tab.label" v-for="tab in elementTabs">
         <div class="flex">
           <n-h2>属性设置</n-h2>
           <n-tag class="ml-2" type="info">
-            {{ store.curComp.label }}组件
+            {{ handleElement.label }}组件
           </n-tag>
         </div>
         <n-form
-          :model="store.curComp"
+          :model="handleElement"
           label-placement="left"
           size="medium"
           :label-width="80"
@@ -137,7 +147,7 @@
           </template>
         </n-form>
       </n-tab-pane>
-      <n-tab-pane name="the beatles" tab="动作">
+      <!-- <n-tab-pane name="the beatles" tab="动作">
         <n-button type="primary" @click="addEvents">添加动作</n-button>
         <n-table :single-line="false" style="margin-top: 30px">
           <thead>
@@ -174,7 +184,7 @@
           </n-collapse-item>
         </n-collapse>
       </n-tab-pane>
-      <n-tab-pane name="jay chou" tab="动画">动作</n-tab-pane>
+      <n-tab-pane name="jay chou" tab="动画">动作</n-tab-pane> -->
     </n-tabs>
   </div>
   <event-modal v-model:modalValue="showEvents"></event-modal>

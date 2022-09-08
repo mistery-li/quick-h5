@@ -25,7 +25,7 @@
     const newHeight = Number(height)
     const halfWidth = newWidth / 2
     const halfHeight = newHeight / 2
-    console.log('render pointer')
+    console.log(props, 'render pointer')
     switch (props.direction) {
       case 'l':
         style.left = 0

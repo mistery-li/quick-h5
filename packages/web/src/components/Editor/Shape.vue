@@ -11,6 +11,10 @@
   import { useRotate } from '../../composable/useRotate'
   import { transformStyls, mod360 } from '../../utils/styles'
   import ShapePoint from './ShapePoint.vue'
+  import { useMainStore } from '../../store/main'
+  import { usePagesStore } from '../../store/pages'
+  import { storeToRefs } from 'pinia'
+  import useSelectElement from '../../hooks/useSelectElement'
 
   type Point = {
     direction: direKeys
@@ -18,6 +22,8 @@
   }
 
   const props = defineProps<{
+    select: boolean
+    active: boolean
     element: IComponent
     zIndex: number
   }>()
@@ -25,6 +31,10 @@
   const shapeRef = ref<HTMLElement>()
 
   const store = useStore()
+
+  const mainStore = useMainStore()
+
+  const { handleElementId } = storeToRefs(mainStore)
 
   const getShapeStyle = <
     T extends Partial<{ [key in keyof CSSStyleDeclaration]: string | number }>
@@ -55,12 +65,16 @@
     },
   })
 
+  const elementIsDragging = ref(false)
+
+  const { selectElement } = useSelectElement()
+
+  const pagesStore = usePagesStore()
+
   const onMouseDownOnShape = (event: MouseEvent) => {
     event.preventDefault()
     event.stopPropagation()
-    if (props.element.uuid !== store.curComp?.uuid) {
-      store.setSelectComp(props.element)
-    }
+    selectElement(event, props.element, true)
     moveState.isStart = true
     const editorRect = document
       .getElementById('editor')
@@ -73,36 +87,40 @@
     const startData = cloneDeep(store.curComp!)
 
     const handleMove = (moveEvent: MouseEvent) => {
+      elementIsDragging.value = true
+      console.log('move')
       moveState.isMove = true
       needToRecord = false
       const { clientX: moveX, clientY: moveY } = moveEvent
       const elemBelow = document.elementFromPoint(event.clientX, event.clientY)
       if (!elemBelow) return
 
-      const style = { ...props.element.style } as Required<
+      const style = cloneDeep(props.element.style) as Required<
         Record<keyof CSSProperties, string | number>
       >
       // 编辑器偏移量和鼠标偏移量 得出具体的坐标
       const transX = moveX - left - offsetX
       const transY = moveY - top - offsetY
-      const maxMove = {
-        x: 375 - (style.width as number),
-      }
       const movePos = {
-        x: transX < 0 ? 0 : transX > maxMove.x ? maxMove.x : transX,
-        y: transY < 0 ? 0 : transY,
+        x: transX,
+        y: transY,
       }
+      console.log(movePos, 'movePos')
       const pos = {
         x: movePos.x,
         y: movePos.y,
       }
       style.left = movePos.x
       style.top = movePos.y
+      console.log(style, '00000')
+      pagesStore.updateElementStyle(style)
       // style.transform = `translate3d(${movePos.x}px, ${movePos.y}px, 0)`
       moveState.pos = {
         x: movePos.x,
         y: movePos.y,
       }
+
+      console.log(props.element.style, 'style  ssss ')
       store.updateSelectedCompDataAnyStyles(pos, style)
     }
 
@@ -279,12 +297,12 @@
     ref="shapeRef"
     :style="getShapeStyle(props.element?.style)"
     class="shape"
-    :class="props.element.uuid === store.curComp?.uuid ? 'active' : ''"
+    :class="[props.active ? 'active' : '', props.select ? 'selected' : '']"
     @contextmenu="onContextMenu(props.element, $event)"
     @mousedown="onMouseDownOnShape"
   >
     <slot></slot>
-    <template v-if="store.curComp?.uuid === props.element.uuid">
+    <template v-if="!elementIsDragging && handleElementId === props.element.id">
       <ShapePoint
         v-for="point in points"
         :key="point"
@@ -316,6 +334,9 @@
   }
   .active {
     border: 1px solid #0ecac1;
+  }
+  .selected {
+    border: 1px dash black;
   }
   .edit {
     &:hover {

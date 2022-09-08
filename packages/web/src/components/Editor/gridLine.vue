@@ -1,0 +1,16 @@
+<script setup lang="ts"></script>
+
+<template></template>
+
+<style lang="scss" scoped>
+  .grid-line {
+    background-size: 15.625px 15.625px;
+    background-repeat: repeat;
+    background-image: linear-gradient(
+        90deg,
+        rgb(240, 240, 240) 5%,
+        transparent 0px
+      ),
+      linear-gradient(rgb(240, 240, 240) 5%, transparent 0px);
+  }
+</style>
